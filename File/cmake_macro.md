@@ -58,6 +58,23 @@
 
 - **WIN32**                       ：WIN32平台，其值为TRUE
 
+- **aux_source_directory**        : 在指定目录下搜寻所有的源文件
+
+```cmake
+    #在src目录下，寻找所有可用的源文件，保存到变量SRC_LIST中
+    aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/src SRC_LIST)
+```
+
+- **file**                        : 查找指定目录下，所有符合条件的文件
+
+```cmake
+    #GLOB仅搜索指定目录， cpp文件将保存到SRC_LIST中
+    file(GLOB SRC_LIST ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp)
+
+    #GLOB_RECURSE递归搜索指定目录， cpp文件将保存到SRC_LIST中
+    file(GLOB_RECURSE SRC_LIST ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp)
+```
+
 ## 3、主要开关选项
 
 - **BUILD_SHARED_LIBS**           : 设为ON将输出动态库
