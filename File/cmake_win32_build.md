@@ -16,6 +16,7 @@ use glfw as example, you can download it's binnary file like below:
 - glfw3.lib
 - glfw3dll.lib
 - glfw3.dll
+
 glfw3.lib is static library, you can use header file and glfw3.lib to static linkage
 
 if you want to dynamic link, use cmake to link glfw3dll.lib, and put glfw3.dll to executable folder, then it will work!
