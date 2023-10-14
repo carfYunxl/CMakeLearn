@@ -19,19 +19,28 @@ aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/src SRC_LIST)
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_SOURCE_DIR}/bin)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include2)
 
-add_library(apShared SHARED ${SRC_LIST})
-add_library(apStatic STATIC ${SRC_LIST})
+# include_directories(${CMAKE_CURRENT_SOURCE_DIR}/GLFW/include)
+
+# add_library(apShared SHARED ${SRC_LIST})
+# add_library(apStatic STATIC ${SRC_LIST})
 
 # 指定ap.dll的输出路径
-set_target_properties(apShared PROPERTIES LIBRARY_OUTPUT_PATH ${CMAKE_CURRENT_SOURCE_DIR}/lib)
+# set_target_properties(apShared PROPERTIES LIBRARY_OUTPUT_PATH ${CMAKE_CURRENT_SOURCE_DIR}/lib)
 
 #包含动态/静态库所在的文件路径
-link_directories(${CMAKE_CURRENT_SOURCE_DIR}/lib)
+# link_directories(${CMAKE_CURRENT_SOURCE_DIR}/GLFW/lib)
 #链接静态库
-link_libraries(apStatic)
+# link_directories(${CMAKE_CURRENT_SOURCE_DIR}/GLFW/lib/)
+set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
+set(BUILD_SHARED_LIBS TRUE)
+
+
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/GLFW/include)
+
+link_directories(${CMAKE_CURRENT_SOURCE_DIR}/GLFW/dll)
 
 add_executable(app ${SRC_LIST} main.cpp)
 
-#链接动态库，注意要写到可执行文件之后
-target_link_libraries(app apShared)
+target_link_libraries(app glfw3dll)
