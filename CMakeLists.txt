@@ -33,14 +33,14 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include2)
 # link_directories(${CMAKE_CURRENT_SOURCE_DIR}/GLFW/lib)
 #链接静态库
 # link_directories(${CMAKE_CURRENT_SOURCE_DIR}/GLFW/lib/)
-set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
-set(BUILD_SHARED_LIBS TRUE)
+# set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
+# set(BUILD_SHARED_LIBS TRUE)
 
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/GLFW/include)
 
-link_directories(${CMAKE_CURRENT_SOURCE_DIR}/GLFW/dll)
+link_directories(${CMAKE_CURRENT_SOURCE_DIR}/GLFW/lib)
 
 add_executable(app ${SRC_LIST} main.cpp)
 
-target_link_libraries(app glfw3dll)
+target_link_libraries(app glfw3)
