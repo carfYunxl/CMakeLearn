@@ -1,4 +1,6 @@
 /bin/
 /build/
 *.git
+lib/Debug/*.pdb
+lib/Release/*.pdb
 
