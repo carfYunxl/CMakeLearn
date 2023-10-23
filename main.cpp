@@ -1,9 +1,7 @@
-#include <iostream>
-
-#include "Printer.hpp"
-#include "test.hpp"
-
+#define GLFW_INCLUDE_NONE
+#include "glad/glad.h"
 #include "glfw3.h"
+#include <iostream>
 
 void ProcessError(int error_code, const char* description)
 {
@@ -68,17 +66,16 @@ void ProcessWinResize(GLFWwindow* window, int width, int height)
 
 int main()
 {
-    std::cout << "Hello World!" << std::endl; 
-
-    Printer print(std::string("hello cmake!"));
-    
-    print.print();
-
-    TEST::TS::print();
-
-    glfwInit();
+    if(!glfwInit())
+        return -1;
     
     GLFWwindow* window = glfwCreateWindow(1200, 800, "My Title", nullptr, nullptr);
+
+    if(!window)
+    {
+        glfwTerminate();
+        return -1;
+    }
 
     glfwSetErrorCallback(ProcessError);
     glfwSetKeyCallback(window, ProcessKey);
@@ -92,8 +89,28 @@ int main()
     // glfwSetFramebufferSizeCallback();
     glfwSetWindowSizeCallback(window, ProcessWinResize);
 
+    glfwMakeContextCurrent(window);
+
+    if(!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+    {
+        std::cout << "Failed to initialize GLAD" << std::endl;
+        return -1;
+    }
+
     while (!glfwWindowShouldClose(window)) 
     {
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        glBegin(GL_TRIANGLES);
+
+        glVertex2f(-0.5, -0.5);
+        glVertex2f( 0.5, -0.5);
+        glVertex2f( 0.0,  0.5);
+
+        glEnd();
+
+        glfwSwapBuffers(window);
+
         glfwPollEvents();
     }
 

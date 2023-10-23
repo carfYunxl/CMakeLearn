@@ -1,6 +1,6 @@
 mkdir build
 cd build
-cmake "Visual Studio 16 2019" "-A win32" ..
+cmake "Visual Studio 17 22022" "-A win32" ..
 cmake --build .
 
 cd ..
