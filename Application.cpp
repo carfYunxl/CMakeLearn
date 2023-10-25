@@ -1,7 +1,9 @@
 #define GLFW_INCLUDE_NONE
-#include "glad/glad.h"
-#include "glfw3.h"
-#include <iostream>
+#include "pch.h"
+#include "Shader.h"
+#include "VertextBuffer.h"
+#include "VertexArray.h"
+#include <filesystem>
 
 void ProcessError(int error_code, const char* description)
 {
@@ -67,28 +69,22 @@ void ProcessWinResize(GLFWwindow* window, int width, int height)
 int main()
 {
     if(!glfwInit())
-        return -1;
-    
+        return -1; 
     GLFWwindow* window = glfwCreateWindow(1200, 800, "My Title", nullptr, nullptr);
-
     if(!window)
     {
         glfwTerminate();
         return -1;
     }
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     glfwSetErrorCallback(ProcessError);
     glfwSetKeyCallback(window, ProcessKey);
     glfwSetMouseButtonCallback(window, ProcessMouseButton);
-    // glfwSetScrollCallback();
-    // glfwSetCharCallback();
-    // glfwSetCharModsCallback();
-    // glfwSetCursorEnterCallback();
     glfwSetCursorPosCallback(window,ProcessMousePos);
-    // glfwSetDropCallback();
-    // glfwSetFramebufferSizeCallback();
     glfwSetWindowSizeCallback(window, ProcessWinResize);
-
     glfwMakeContextCurrent(window);
 
     if(!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
@@ -97,28 +93,34 @@ int main()
         return -1;
     }
 
+    GL::VertexArray vArray;
+    
+    std::filesystem::path path = std::filesystem::current_path();
+    path /= "shaders/Basic.shader";
+    GL::Shader shader(path.string().c_str());
+    GL::VertexBuffer vBuffer;
+    vArray.Bind();
+    vBuffer.Bind();
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+
+    vArray.UnBind();
+    
     while (!glfwWindowShouldClose(window)) 
     {
+        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        glBegin(GL_TRIANGLES);
+        shader.Bind();
+        vArray.Bind();
 
-        glVertex2f(-0.5, -0.5);
-        glVertex2f( 0.5, -0.5);
-        glVertex2f( 0.0,  0.5);
-
-        glEnd();
+        glDrawArrays(GL_TRIANGLES, 0, 3);
 
         glfwSwapBuffers(window);
-
         glfwPollEvents();
     }
 
     glfwDestroyWindow(window);
-
-    glfwTerminate();
-
-    std::cin.get();
-    
+    glfwTerminate();  
     return 0;    
 }
