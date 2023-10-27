@@ -1,32 +1,35 @@
 #include "glad/glad.h"
 #include "VertextBuffer.h"
-#include "Gl_Data.h"
 
 namespace GL
 {
-    VertexBuffer::VertexBuffer()
+    VertexBuffer::VertexBuffer(float* buffer, unsigned int size)
+        : m_Buffer(buffer), m_Size(size)
     {
-        Init();
+        glGenBuffers(1, &m_VBO);
     }
 
     VertexBuffer::~VertexBuffer()
     {
-        glDeleteBuffers(1, &VBO);
+        glDeleteBuffers(1, &m_VBO);
     }
 
     void VertexBuffer::Bind()
     {
-        glBindBuffer(GL_ARRAY_BUFFER, VBO);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(Data2D::g_vertices), Data2D::g_vertices, GL_STATIC_DRAW);
+        glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
+        glBufferData(GL_ARRAY_BUFFER, m_Size, m_Buffer, GL_STATIC_DRAW);
     }
 
     void VertexBuffer::UnBind()
     {
         glBindBuffer(GL_ARRAY_BUFFER, 0);
     }
-    
-    void VertexBuffer::Init()
+
+    void VertexBuffer::Reset(float* buffer, unsigned int size)
     {
-        glGenBuffers(1, &VBO);
+        m_Size = size;
+        m_Buffer = buffer;
+        glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
+        glBufferData(GL_ARRAY_BUFFER, m_Size, m_Buffer, GL_STATIC_DRAW);
     }
 }

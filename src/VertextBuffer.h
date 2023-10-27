@@ -6,19 +6,18 @@ namespace GL
     class VertexBuffer
     {
     public:
-        VertexBuffer();
+        VertexBuffer(float* buffer, unsigned int size);
         ~VertexBuffer();
 
         void Bind();
         void UnBind();
 
-        unsigned int GetVBO() const {return VBO;}
+        void Reset(float* buffer, unsigned int size);
 
     private:
-        void Init();
-
-    private:
-        unsigned int VBO;
+        unsigned int    m_VBO;
+        float*          m_Buffer{nullptr};
+        unsigned int    m_Size{0};
     };
 }
 #endif //VERTEX_BUFFER_H

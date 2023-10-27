@@ -13,7 +13,11 @@ set(EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_SOURCE_DIR}/bin)
 set(GLAD_LIB glad)
 add_subdirectory(glad)
 
+set(IMGUI_LIB ImGui)
+add_subdirectory(ImGui)
+
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/IMGUI)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/GLAD/include/)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/GLAD/include/KHR/)
@@ -25,4 +29,4 @@ link_directories(${CMAKE_CURRENT_SOURCE_DIR}/lib)
 
 add_executable(app ${SRC_LIST} Application.cpp)
 
-target_link_libraries(app glfw3 opengl32 glad)
+target_link_libraries(app glfw3 opengl32 glad ImGui)

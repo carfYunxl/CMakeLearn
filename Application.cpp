@@ -3,6 +3,8 @@
 #include "Shader.h"
 #include "VertextBuffer.h"
 #include "VertexArray.h"
+#include "IndexBuffer.h"
+#include "Shape.h"
 #include <filesystem>
 
 void ProcessError(int error_code, const char* description)
@@ -93,28 +95,23 @@ int main()
         return -1;
     }
 
-    GL::VertexArray vArray;
-    
     std::filesystem::path path = std::filesystem::current_path();
     path /= "shaders/Basic.shader";
     GL::Shader shader(path.string().c_str());
-    GL::VertexBuffer vBuffer;
-    vArray.Bind();
-    vBuffer.Bind();
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
 
-    vArray.UnBind();
-    
+    GL::Triangle triangle;
+    GL::Rectangle rectangle;
+
     while (!glfwWindowShouldClose(window)) 
     {
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        glClearColor(0.2f, 0.2f, 0.4f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
         shader.Bind();
-        vArray.Bind();
+        triangle.Draw();
 
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+        shader.Bind();
+        rectangle.Draw();
 
         glfwSwapBuffers(window);
         glfwPollEvents();
