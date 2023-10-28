@@ -7,13 +7,13 @@
 #include "Shape.h"
 #include <filesystem>
 #include "Texture.h"
-#include "glm/gtc/matrix_transform.hpp"
 
 static float r = 0.0f;
 static float g = 0.0f;
 static float b = 0.0f;
 static float x = 0.0f;
 static float y = 0.0f;
+static float alpha = 45.0f;
 
 void ProcessError(int error_code, const char* description)
 {
@@ -51,8 +51,10 @@ void ProcessKey(GLFWwindow* window, int key, int scancode, int action, int mods)
                 g -= 0.1f;
                 if(g < 0.1f) g = 1.0f;
 
-                x -= 0.02f;
-                if(x < -1.0f) x = 1.0f;
+                // x -= 0.02f;
+                // if(x < -1.0f) x = 1.0f;
+
+                alpha += 20.0f;
             }
 
             if(GLFW_KEY_D == key)
@@ -60,8 +62,10 @@ void ProcessKey(GLFWwindow* window, int key, int scancode, int action, int mods)
                 g += 0.1f;
                 if(g > 1.0f) g = 0.1f;
 
-                x += 0.02f;
-                if(x > 1.0f) x = -1.0f;
+                // x += 0.02f;
+                // if(x > 1.0f) x = -1.0f;
+
+                alpha -= 20.0f;
             }
         }
         break;
@@ -74,6 +78,7 @@ void ProcessKey(GLFWwindow* window, int key, int scancode, int action, int mods)
 
                 y += 0.02f;
                 if(y > 1.0f) y = -1.0f;
+
             }
 
             if(key == GLFW_KEY_S)
@@ -90,8 +95,10 @@ void ProcessKey(GLFWwindow* window, int key, int scancode, int action, int mods)
                 g -= 0.1f;
                 if(g < 0.1f) g = 1.0f;
 
-                x -= 0.02f;
-                if(x < -1.0f) x = 1.0f;
+                // x -= 0.02f;
+                // if(x < -1.0f) x = 1.0f;
+
+                alpha += 20.0f;
             }
 
             if(GLFW_KEY_D == key)
@@ -99,8 +106,9 @@ void ProcessKey(GLFWwindow* window, int key, int scancode, int action, int mods)
                 g += 0.1f;
                 if(g > 1.0f) g = 0.1f;
 
-                x += 0.02f;
-                if(x > 1.0f) x = -1.0f;
+                // x += 0.02f;
+                // if(x > 1.0f) x = -1.0f;
+                alpha -= 20.0f;
             }
         }
         break;
@@ -162,36 +170,33 @@ int main()
         return -1;
     }
 
+    glEnable(GL_DEPTH_TEST);
+
     std::filesystem::path path = std::filesystem::current_path();
     std::filesystem::path sPath = path / "shaders" / "Basic.shader";
     std::filesystem::path iPath = path / "texture" / "happyface.png";
-    std::filesystem::path iiPath = path / "texture" / "wall.jpg";
+    std::filesystem::path iiPath = path / "texture" / "container.jpg";
 
-    GL::Triangle triangle(iPath.string().c_str());
-    GL::Rectangle rectangle(iPath.string().c_str());
+    GL::Shader shader(sPath.string().c_str(), iPath.string().c_str());
+    GL::Cube cube(shader, iPath.string().c_str());
 
     GL::Texture texture1(iPath.string().c_str());
     GL::Texture texture2(iiPath.string().c_str());
     
-    GL::Shader shader(sPath.string().c_str(), iPath.string().c_str());
     shader.SetInt("u_Texture", 0);
 
     while (!glfwWindowShouldClose(window)) 
     {
         glClearColor(0.2f, 0.2f, 0.4f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         shader.Bind();
-        shader.Set4f("u_Color", {r, g, b, 1.0f });
-        shader.SetMat4("u_Transform", glm::rotate(glm::mat4(1.0f),glm::radians(-90.0f) ,{0,0,1}) * glm::scale(glm::mat4(1.0), {0.5f,0.5f,0.0f}) * glm::translate(glm::mat4(1.0), {0.0f,0.0f,0.0f}));
         texture2.Bind();
-        triangle.Draw();
 
-        shader.Bind();
-        shader.Set4f("u_Color", {r, g, b, 1.0f });
-        shader.SetMat4("u_Transform", glm::rotate(glm::mat4(1.0f),glm::radians(90.0f) ,{0,0,1}) * glm::scale(glm::mat4(1.0), {1.5f,1.5f,0.0f}) * glm::translate(glm::mat4(1.0), {x,y,0.0f}));
-        texture1.Bind();
-        rectangle.Draw();
+        for(int i = 0;i < 10; ++i)
+        {
+            cube.Draw({x + 0.5 * i, y + 0.5f * i, i * 1.0f}, alpha, 0.2f);
+        }
 
         glfwSwapBuffers(window);
         glfwPollEvents();

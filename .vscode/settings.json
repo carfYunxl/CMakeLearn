@@ -71,6 +71,10 @@
         "xlocmes": "cpp",
         "xlocmon": "cpp",
         "xloctime": "cpp",
-        "stb_image.h": "c"
+        "stb_image.h": "c",
+        "array": "cpp",
+        "*.tcc": "cpp",
+        "cwctype": "cpp",
+        "cinttypes": "cpp"
     }
 }

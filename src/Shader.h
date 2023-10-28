@@ -3,6 +3,7 @@
 
 #include "glm.hpp"
 #include <memory>
+#include <string>
 
 namespace GL
 {
