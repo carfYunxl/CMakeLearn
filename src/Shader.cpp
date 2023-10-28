@@ -1,9 +1,10 @@
 #include "pch.h"
 #include "Shader.h"
+#include "Texture.h"
 
 namespace GL
 {
-    Shader::Shader(const char* shader_source)
+    Shader::Shader(const char* shader_source, const char* imagepath)
     {
         try
         {
@@ -13,6 +14,8 @@ namespace GL
             unsigned int fShader = Compile(y.c_str(),GL_FRAGMENT_SHADER);
 
             Link(vShader, fShader);
+
+            // m_Texture = std::make_unique<Texture>(imagepath);
         }
         catch(const std::exception& e)
         {
@@ -27,6 +30,9 @@ namespace GL
 
     void Shader::Bind()
     {
+        // glActiveTexture(GL_TEXTURE0);
+        // glBindTexture(GL_TEXTURE_2D, m_Texture->GetTexture());
+        // m_Texture->Bind();
         glUseProgram(m_sProgram);
     }
 
@@ -118,5 +124,17 @@ namespace GL
         }
 
         return {sVertex, sFragment};
+    }
+
+    void Shader::Set4f(const char* name, const glm::vec4& color)
+    {
+        int nLoc = glGetUniformLocation(m_sProgram, name);
+        glUniform4f(nLoc, color.x, color.y, color.z, color.w);
+    }
+
+    void Shader::SetInt(const char* name, unsigned int index)
+    {
+        int nLoc = glGetUniformLocation(m_sProgram, name);
+        glUniform1i(nLoc, index);
     }
 }

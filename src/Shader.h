@@ -1,8 +1,13 @@
 #ifndef SHADER_H_
 #define SHADER_H_
 
+#include "glm.hpp"
+#include <memory>
+
 namespace GL
 {
+    // class Texture;
+
     class Shader
     {
         public:
@@ -13,10 +18,15 @@ namespace GL
                 FRAGMENT
             };
 
-            explicit Shader(const char* shader_source);
+            Shader(const char* shader_source, const char* imagepath);
             ~Shader();
             void Bind();
             void UnBind();
+
+            unsigned int const GetProgram() const {return m_sProgram;}
+
+            void Set4f(const char* name, const glm::vec4& color);
+            void SetInt(const char* name, unsigned int index);
 
         private:
             unsigned int    Compile(const char* shader, unsigned int type);
@@ -24,7 +34,8 @@ namespace GL
 
             std::pair<std::string, std::string> ParserShaderFile(const char* shader_source);
         private:
-            unsigned int m_sProgram;
+            unsigned int                m_sProgram;
+            // std::unique_ptr<Texture>    m_Texture;
     };
 }
 

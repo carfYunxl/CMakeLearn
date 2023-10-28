@@ -1,21 +1,29 @@
 #include "Shape.h"
 #include "glad/glad.h"
 #include "VertextBuffer.h"
+#include "Texture.h"
 #include "IndexBuffer.h"
 
 namespace GL
 {
-    Triangle::Triangle()
+    Triangle::Triangle(const char* imagepath)
     {
         m_vertexArray.Bind();
-        m_vertexBuffer = new VertexBuffer(m_Vertices.data(), m_Vertices.size()*sizeof(float)); 
+        m_vertexBuffer = std::make_unique<VertexBuffer>(m_Vertices.data(), m_Vertices.size()*sizeof(float)); 
         m_vertexBuffer->Bind();
 
-        m_indexBuffer = new IndexBuffer(m_Indices.data(), m_Indices.size() * sizeof(unsigned));
+        m_indexBuffer = std::make_unique<IndexBuffer>(m_Indices.data(), m_Indices.size() * sizeof(unsigned));
         m_indexBuffer->Bind();
 
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
         glEnableVertexAttribArray(0);
+
+        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+        glEnableVertexAttribArray(1);
+
+        m_Texture = std::make_unique<Texture>(imagepath);
+        m_Texture->Bind();
+
         m_vertexArray.UnBind();
     }
 
@@ -32,17 +40,24 @@ namespace GL
         m_vertexArray.UnBind();
     }
 
-    Rectangle::Rectangle()
+    Rectangle::Rectangle(const char* imagepath)
     {
         m_vertexArray.Bind();
-        m_vertexBuffer = new VertexBuffer(m_Vertices.data(), m_Vertices.size() * sizeof(float)); 
+        m_vertexBuffer = std::make_unique<VertexBuffer>(m_Vertices.data(), m_Vertices.size() * sizeof(float)); 
         m_vertexBuffer->Bind();
 
-        m_indexBuffer = new IndexBuffer(m_Indices.data(), m_Indices.size() * sizeof(unsigned int));
+        m_indexBuffer = std::make_unique<IndexBuffer>(m_Indices.data(), m_Indices.size() * sizeof(unsigned int));
         m_indexBuffer->Bind();
 
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
         glEnableVertexAttribArray(0);
+
+        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+        glEnableVertexAttribArray(1);
+
+        m_Texture = std::make_unique<Texture>(imagepath);
+        m_Texture->Bind();
+
         m_vertexArray.UnBind();
     }
 

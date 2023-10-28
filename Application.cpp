@@ -7,6 +7,10 @@
 #include "Shape.h"
 #include <filesystem>
 
+static float r = 0.0f;
+static float g = 0.0f;
+static float b = 0.0f;
+
 void ProcessError(int error_code, const char* description)
 {
     std::cout << "Error code : " << error_code << std::endl;
@@ -22,8 +26,18 @@ void ProcessKey(GLFWwindow* window, int key, int scancode, int action, int mods)
         {
             switch(key)
             {
+                case GLFW_KEY_W:
+                r += 0.1f;
+                if(r > 1.0f) r = 0.1f;
+                case GLFW_KEY_S:
+                b -= 0.1f;
+                if(b < 0.1f) b = 1.0f;
                 case GLFW_KEY_A:
-                std::cout << "move left" << std::endl;
+                g -= 0.1f;
+                if(g < 0.1f) g = 1.0f;
+                case GLFW_KEY_D:
+                g += 0.1f;
+                if(g > 1.0f) g = 0.1f;
                 break;
             }
         }
@@ -96,11 +110,14 @@ int main()
     }
 
     std::filesystem::path path = std::filesystem::current_path();
-    path /= "shaders/Basic.shader";
-    GL::Shader shader(path.string().c_str());
+    std::filesystem::path sPath = path / "shaders" / "Basic.shader";
+    std::filesystem::path iPath = path / "texture" / "wall.jpg";
 
-    GL::Triangle triangle;
-    GL::Rectangle rectangle;
+    GL::Triangle triangle(iPath.string().c_str());
+    GL::Rectangle rectangle(iPath.string().c_str());
+    
+    GL::Shader shader(sPath.string().c_str(), iPath.string().c_str());
+    shader.SetInt("u_Texture", 0);
 
     while (!glfwWindowShouldClose(window)) 
     {
@@ -108,9 +125,11 @@ int main()
         glClear(GL_COLOR_BUFFER_BIT);
 
         shader.Bind();
+        shader.Set4f("u_Color", {r, g, b, 1.0f });
         triangle.Draw();
 
         shader.Bind();
+        shader.Set4f("u_Color", {r, g, b, 1.0f });
         rectangle.Draw();
 
         glfwSwapBuffers(window);

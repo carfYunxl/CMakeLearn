@@ -13,7 +13,7 @@ namespace GL
         void UnBind(); 
     private:
         unsigned int    m_IBO{0};
-        unsigned int*          m_Buffer{nullptr};
+        unsigned int*   m_Buffer{nullptr};
         unsigned int    m_Size{0};
     };
 }
