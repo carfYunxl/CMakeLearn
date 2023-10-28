@@ -27,6 +27,7 @@ namespace GL
 
             void Set4f(const char* name, const glm::vec4& color);
             void SetInt(const char* name, unsigned int index);
+            void SetMat4(const char* name, const glm::mat4& trans);
 
         private:
             unsigned int    Compile(const char* shader, unsigned int type);

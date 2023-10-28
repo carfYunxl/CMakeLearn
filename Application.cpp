@@ -7,10 +7,13 @@
 #include "Shape.h"
 #include <filesystem>
 #include "Texture.h"
+#include "glm/gtc/matrix_transform.hpp"
 
 static float r = 0.0f;
 static float g = 0.0f;
 static float b = 0.0f;
+static float x = 0.0f;
+static float y = 0.0f;
 
 void ProcessError(int error_code, const char* description)
 {
@@ -25,32 +28,80 @@ void ProcessKey(GLFWwindow* window, int key, int scancode, int action, int mods)
     {
         case GLFW_PRESS:
         {
-            switch(key)
+            if(key == GLFW_KEY_W)
             {
-                case GLFW_KEY_W:
                 r += 0.1f;
                 if(r > 1.0f) r = 0.1f;
-                case GLFW_KEY_S:
+
+                y += 0.02f;
+                if(y > 1.0f) y = -1.0f;
+            }
+
+            if(key == GLFW_KEY_S)
+            {
                 b -= 0.1f;
                 if(b < 0.1f) b = 1.0f;
-                case GLFW_KEY_A:
+
+                y -= 0.02f;
+                if(y < -1.0f) y = 1.0f;
+            }
+
+            if(GLFW_KEY_A == key)
+            {
                 g -= 0.1f;
                 if(g < 0.1f) g = 1.0f;
-                case GLFW_KEY_D:
+
+                x -= 0.02f;
+                if(x < -1.0f) x = 1.0f;
+            }
+
+            if(GLFW_KEY_D == key)
+            {
                 g += 0.1f;
                 if(g > 1.0f) g = 0.1f;
-                break;
+
+                x += 0.02f;
+                if(x > 1.0f) x = -1.0f;
             }
-        }
-        break;
-        case GLFW_RELEASE:
-        {
-            std::cout << "[key release] " << key << " released!" << std::endl;
         }
         break;
         case GLFW_REPEAT:
         {
-            std::cout << "[key repeat] " << key << " repeat!" << std::endl;
+            if(key == GLFW_KEY_W)
+            {
+                r += 0.1f;
+                if(r > 1.0f) r = 0.1f;
+
+                y += 0.02f;
+                if(y > 1.0f) y = -1.0f;
+            }
+
+            if(key == GLFW_KEY_S)
+            {
+                b -= 0.1f;
+                if(b < 0.1f) b = 1.0f;
+
+                y -= 0.02f;
+                if(y < -1.0f) y = 1.0f;
+            }
+
+            if(GLFW_KEY_A == key)
+            {
+                g -= 0.1f;
+                if(g < 0.1f) g = 1.0f;
+
+                x -= 0.02f;
+                if(x < -1.0f) x = 1.0f;
+            }
+
+            if(GLFW_KEY_D == key)
+            {
+                g += 0.1f;
+                if(g > 1.0f) g = 0.1f;
+
+                x += 0.02f;
+                if(x > 1.0f) x = -1.0f;
+            }
         }
         break;
     }
@@ -81,6 +132,7 @@ void ProcessMousePos(GLFWwindow* window, double xpos, double ypos)
 void ProcessWinResize(GLFWwindow* window, int width, int height)
 {
     glfwSetWindowSize(window, width, height);
+    glViewport(0,0,width,height);
 }
 
 int main()
@@ -131,11 +183,13 @@ int main()
 
         shader.Bind();
         shader.Set4f("u_Color", {r, g, b, 1.0f });
+        shader.SetMat4("u_Transform", glm::rotate(glm::mat4(1.0f),glm::radians(-90.0f) ,{0,0,1}) * glm::scale(glm::mat4(1.0), {0.5f,0.5f,0.0f}) * glm::translate(glm::mat4(1.0), {0.0f,0.0f,0.0f}));
         texture2.Bind();
         triangle.Draw();
 
         shader.Bind();
         shader.Set4f("u_Color", {r, g, b, 1.0f });
+        shader.SetMat4("u_Transform", glm::rotate(glm::mat4(1.0f),glm::radians(90.0f) ,{0,0,1}) * glm::scale(glm::mat4(1.0), {1.5f,1.5f,0.0f}) * glm::translate(glm::mat4(1.0), {x,y,0.0f}));
         texture1.Bind();
         rectangle.Draw();
 

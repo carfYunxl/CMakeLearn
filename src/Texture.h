@@ -13,8 +13,6 @@ namespace GL
 
         unsigned int const GetTexture() const {return texture;}
 
-        void Reset(const char* filepath);
-
     private:
         unsigned int texture;
         const char* m_filepath;

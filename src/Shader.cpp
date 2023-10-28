@@ -2,6 +2,9 @@
 #include "Shader.h"
 #include "Texture.h"
 
+#include "glm/gtc/matrix_transform.hpp"
+#include "glm/gtc/type_ptr.hpp"
+
 namespace GL
 {
     Shader::Shader(const char* shader_source, const char* imagepath)
@@ -136,5 +139,11 @@ namespace GL
     {
         int nLoc = glGetUniformLocation(m_sProgram, name);
         glUniform1i(nLoc, index);
+    }
+
+    void Shader::SetMat4(const char* name, const glm::mat4& trans)
+    {
+        int nLoc = glGetUniformLocation(m_sProgram, name);
+        glUniformMatrix4fv(nLoc, 1, GL_FALSE, glm::value_ptr(trans));
     }
 }
