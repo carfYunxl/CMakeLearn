@@ -1,7 +1,7 @@
 #include "Shape.h"
 #include "glad/glad.h"
 #include "VertextBuffer.h"
-#include "Texture.h"
+// #include "Texture.h"
 #include "IndexBuffer.h"
 
 namespace GL
@@ -21,8 +21,8 @@ namespace GL
         glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
         glEnableVertexAttribArray(1);
 
-        m_Texture = std::make_unique<Texture>(imagepath);
-        m_Texture->Bind();
+        // m_Texture = std::make_unique<Texture>(imagepath);
+        // m_Texture->Bind();
 
         m_vertexArray.UnBind();
     }
@@ -55,8 +55,8 @@ namespace GL
         glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
         glEnableVertexAttribArray(1);
 
-        m_Texture = std::make_unique<Texture>(imagepath);
-        m_Texture->Bind();
+        // m_Texture = std::make_unique<Texture>(imagepath);
+        // m_Texture->Bind();
 
         m_vertexArray.UnBind();
     }

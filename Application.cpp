@@ -6,6 +6,7 @@
 #include "IndexBuffer.h"
 #include "Shape.h"
 #include <filesystem>
+#include "Texture.h"
 
 static float r = 0.0f;
 static float g = 0.0f;
@@ -111,10 +112,14 @@ int main()
 
     std::filesystem::path path = std::filesystem::current_path();
     std::filesystem::path sPath = path / "shaders" / "Basic.shader";
-    std::filesystem::path iPath = path / "texture" / "wall.jpg";
+    std::filesystem::path iPath = path / "texture" / "happyface.png";
+    std::filesystem::path iiPath = path / "texture" / "wall.jpg";
 
     GL::Triangle triangle(iPath.string().c_str());
     GL::Rectangle rectangle(iPath.string().c_str());
+
+    GL::Texture texture1(iPath.string().c_str());
+    GL::Texture texture2(iiPath.string().c_str());
     
     GL::Shader shader(sPath.string().c_str(), iPath.string().c_str());
     shader.SetInt("u_Texture", 0);
@@ -126,10 +131,12 @@ int main()
 
         shader.Bind();
         shader.Set4f("u_Color", {r, g, b, 1.0f });
+        texture2.Bind();
         triangle.Draw();
 
         shader.Bind();
         shader.Set4f("u_Color", {r, g, b, 1.0f });
+        texture1.Bind();
         rectangle.Draw();
 
         glfwSwapBuffers(window);

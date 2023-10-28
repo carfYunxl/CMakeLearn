@@ -9,7 +9,7 @@ namespace GL
 {
     struct VertexBuffer;
     struct IndexBuffer;
-    struct Texture;
+    // struct Texture;
 
     class Triangle
     {
@@ -22,7 +22,7 @@ namespace GL
         VertexArray                     m_vertexArray;
         std::unique_ptr<VertexBuffer>   m_vertexBuffer;
         std::unique_ptr<IndexBuffer>    m_indexBuffer;
-        std::unique_ptr<Texture>        m_Texture;
+        // std::unique_ptr<Texture>        m_Texture;
 
         std::vector<float>          m_Vertices{
                 0.0f,  0.0f, 0.0f, 0.0f, 0.0f,
@@ -45,7 +45,7 @@ namespace GL
         VertexArray                     m_vertexArray;
         std::unique_ptr<VertexBuffer>   m_vertexBuffer;
         std::unique_ptr<IndexBuffer>    m_indexBuffer;
-        std::unique_ptr<Texture>        m_Texture;
+        // std::unique_ptr<Texture>        m_Texture;
 
         std::vector<float>              m_Vertices{
         // positions        // texture coords
