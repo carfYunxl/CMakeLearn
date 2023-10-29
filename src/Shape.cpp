@@ -103,7 +103,7 @@ namespace GL
         m_vertexArray.UnBind();
     }
 
-    void Cube::Draw(const glm::vec3& pos, float rotation, float scale)
+    void Cube::Draw(const Camera& camera, const glm::vec3& pos, float rotation, float scale)
     {
         m_Shader.Set4f("u_Color", {1.0f, 0.5f, 0.2f, 1.0f });
         m_Shader.SetMat4(
@@ -123,11 +123,8 @@ namespace GL
                     )
                 );
         // view matrix
-        float CamX = sin(glfwGetTime()) * 3.0f;
-        float CamZ = cos(glfwGetTime()) * 3.0f;
-        auto view = glm::lookAt(glm::vec3(CamX, 0.0f, CamZ), glm::vec3(0.0f,0.0f,0.0f), {0.0f,1.0f,0.0f});
-        m_Shader.SetMat4("u_View", view);
-        m_Shader.SetMat4("u_Projection", glm::perspective(glm::radians(45.0f), 1.778f, 0.1f, 100.0f));
+        m_Shader.SetMat4("u_View", camera.GetView());
+        m_Shader.SetMat4("u_Projection", camera.GetProjection());
 
         m_vertexArray.Bind();
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);

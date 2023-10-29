@@ -7,13 +7,13 @@
 #include "Shape.h"
 #include <filesystem>
 #include "Texture.h"
+#include "TimeStep.h"
+#include "Camera.h"
 
-static float r = 0.0f;
-static float g = 0.0f;
-static float b = 0.0f;
-static float x = 0.0f;
-static float y = 0.0f;
-static float alpha = 45.0f;
+static float m_lastFrameTime = 0.0f;
+static GL::Timestep m_TS = 0.0f;
+
+GL::Camera camera(1.778f);
 
 void ProcessError(int error_code, const char* description)
 {
@@ -24,48 +24,46 @@ void ProcessError(int error_code, const char* description)
 void ProcessKey(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
     //`GLFW_PRESS`, `GLFW_RELEASE` or `GLFW_REPEAT`
+    float v = m_TS * camera.g_MoveSpeed;
+    auto front = camera.GetFront();
+    auto up = camera.GetUp();
     switch(action)
     {
         case GLFW_PRESS:
         {
             if(key == GLFW_KEY_W)
             {
-                r += 0.1f;
-                if(r > 1.0f) r = 0.1f;
-
-                y += 0.02f;
-                if(y > 1.0f) y = -1.0f;
+                camera.AddCameraPosZ(-v);
             }
 
             if(key == GLFW_KEY_S)
             {
-                b -= 0.1f;
-                if(b < 0.1f) b = 1.0f;
-
-                y -= 0.02f;
-                if(y < -1.0f) y = 1.0f;
+                camera.AddCameraPosZ(v);
             }
 
             if(GLFW_KEY_A == key)
             {
-                g -= 0.1f;
-                if(g < 0.1f) g = 1.0f;
-
-                // x -= 0.02f;
-                // if(x < -1.0f) x = 1.0f;
-
-                alpha += 20.0f;
+                camera.AddCameraPosX(-v);
             }
 
             if(GLFW_KEY_D == key)
             {
-                g += 0.1f;
-                if(g > 1.0f) g = 0.1f;
+                camera.AddCameraPosX(v);
+            }
 
-                // x += 0.02f;
-                // if(x > 1.0f) x = -1.0f;
+            if(key == GLFW_KEY_ESCAPE)
+            {
+                glfwSetWindowShouldClose(window, true);
+            }
 
-                alpha -= 20.0f;
+            if(key == GLFW_KEY_Q)
+            {
+                camera.AddCameraPosY(v);
+            }
+
+            if(key == GLFW_KEY_E)
+            {
+                camera.AddCameraPosY(-v);
             }
         }
         break;
@@ -73,81 +71,95 @@ void ProcessKey(GLFWwindow* window, int key, int scancode, int action, int mods)
         {
             if(key == GLFW_KEY_W)
             {
-                r += 0.1f;
-                if(r > 1.0f) r = 0.1f;
-
-                y += 0.02f;
-                if(y > 1.0f) y = -1.0f;
-
+                camera.AddCameraPosZ(-v);
             }
 
             if(key == GLFW_KEY_S)
             {
-                b -= 0.1f;
-                if(b < 0.1f) b = 1.0f;
-
-                y -= 0.02f;
-                if(y < -1.0f) y = 1.0f;
+                camera.AddCameraPosZ(v);
             }
 
             if(GLFW_KEY_A == key)
             {
-                g -= 0.1f;
-                if(g < 0.1f) g = 1.0f;
-
-                // x -= 0.02f;
-                // if(x < -1.0f) x = 1.0f;
-
-                alpha += 20.0f;
+                camera.AddCameraPosX(-v);
             }
 
             if(GLFW_KEY_D == key)
             {
-                g += 0.1f;
-                if(g > 1.0f) g = 0.1f;
+                camera.AddCameraPosX(v);
+            }
 
-                // x += 0.02f;
-                // if(x > 1.0f) x = -1.0f;
-                alpha -= 20.0f;
+            if(key == GLFW_KEY_Q)
+            {
+                camera.AddCameraPosY(v);
+            }
+
+            if(key == GLFW_KEY_E)
+            {
+                camera.AddCameraPosY(-v);
             }
         }
         break;
     }
 }
 
-void ProcessMouseButton(GLFWwindow* window, int button, int action, int mods)
-{
-    switch (action)
-    {
-        case GLFW_PRESS:
-        {
-            std::cout << "mouse button : " << button << "pressed!" << std::endl;
-            break;
-        }
-        case GLFW_RELEASE:
-        {
-            std::cout << "mouse button : " << button << "released!" << std::endl;
-            break;
-        }
-    }
-}
-
 void ProcessMousePos(GLFWwindow* window, double xpos, double ypos)
 {
-    std::cout << "[ " << xpos << "," << ypos << " ]" << std::endl;
+    float x = static_cast<float>(xpos);
+    float y = static_cast<float>(ypos);
+
+    if (camera.g_isFirstMouse)
+    {
+        camera.g_LastX = x;
+        camera.g_LastY = y;
+        camera.g_isFirstMouse = false;
+    }
+
+    float xoffset = x - camera.g_LastX;
+    float yoffset = camera.g_LastY - y;
+
+    camera.g_LastX = x;
+    camera.g_LastY = y;
+
+    xoffset *= camera.g_Sensitivity;
+    yoffset *= camera.g_Sensitivity;
+
+    camera.AddYaw(xoffset);
+    camera.AddPitch(yoffset);
+
+    if (camera.GetPitch() > 89.0f)
+        camera.SetPitch(89.0f);
+    if (camera.GetPitch() < -89.0f)
+        camera.SetPitch(-89.0f);
+
+    camera.Update();
 }
 
 void ProcessWinResize(GLFWwindow* window, int width, int height)
 {
     glfwSetWindowSize(window, width, height);
     glViewport(0,0,width,height);
+
+    camera.SetAspectio((float)width / (float)height);
+}
+
+void ProcessMouseScroll(GLFWwindow* window, double xoffset, double yoffset)
+{
+    float fov = camera.GetZoom();
+    if(fov >= 1.0f && fov <= 45.0f)
+        camera.AddZoom(-(float)yoffset);
+
+    if ( fov< 1.0f )
+        camera.SetZoom(1.0f);
+    if ( fov > 45.0f )
+        camera.SetZoom(45.0f);
 }
 
 int main()
 {
     if(!glfwInit())
         return -1; 
-    GLFWwindow* window = glfwCreateWindow(1200, 800, "My Title", nullptr, nullptr);
+    GLFWwindow* window = glfwCreateWindow(GL::WIDTH, GL::HEIGHT, "My Title", nullptr, nullptr);
     if(!window)
     {
         glfwTerminate();
@@ -159,10 +171,12 @@ int main()
 
     glfwSetErrorCallback(ProcessError);
     glfwSetKeyCallback(window, ProcessKey);
-    glfwSetMouseButtonCallback(window, ProcessMouseButton);
     glfwSetCursorPosCallback(window,ProcessMousePos);
     glfwSetWindowSizeCallback(window, ProcessWinResize);
+    glfwSetScrollCallback(window, ProcessMouseScroll);
     glfwMakeContextCurrent(window);
+
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     if(!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
     {
@@ -174,7 +188,7 @@ int main()
 
     std::filesystem::path path = std::filesystem::current_path();
     std::filesystem::path sPath = path / "shaders" / "Basic.shader";
-    std::filesystem::path iPath = path / "texture" / "happyface.png";
+    std::filesystem::path iPath = path / "texture" / "ww.jpg";
     std::filesystem::path iiPath = path / "texture" / "container.jpg";
 
     GL::Shader shader(sPath.string().c_str(), iPath.string().c_str());
@@ -187,22 +201,25 @@ int main()
 
     while (!glfwWindowShouldClose(window)) 
     {
+        float time = glfwGetTime();
+        m_TS = time - m_lastFrameTime;
+        m_lastFrameTime = time;
+
+        //std::cout << "FPS = " << 1000 / ts.GetMilliseconds() << std::endl;
+
         glClearColor(0.2f, 0.2f, 0.4f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         shader.Bind();
-        texture2.Bind();
+        texture1.Bind();
 
-        for(int i = 0;i < 10; ++i)
-        {
-            cube.Draw({x + 0.5 * i, y + 0.5f * i, i * 1.0f}, alpha, 0.2f);
-        }
+        cube.Draw(camera, {0.0f, 0.0f, 0.0f}, 0.0f, 1.0f);
 
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
 
     glfwDestroyWindow(window);
-    glfwTerminate();  
-    return 0;    
+    glfwTerminate();
+    return 0;
 }

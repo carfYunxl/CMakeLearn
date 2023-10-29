@@ -5,6 +5,7 @@
 #include "Shader.h"
 #include <vector>
 #include <memory>
+#include "Camera.h"
 
 namespace GL
 {
@@ -67,7 +68,7 @@ namespace GL
         Cube(Shader& shader, const char* imagepath);
         ~Cube();
 
-        void Draw(const glm::vec3& pos, float rotation, float scale);
+        void Draw(const Camera& camera, const glm::vec3& pos, float rotation, float scale);
     private:
         VertexArray                     m_vertexArray;
         std::unique_ptr<VertexBuffer>   m_vertexBuffer;
