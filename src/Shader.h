@@ -19,7 +19,7 @@ namespace GL
                 FRAGMENT
             };
 
-            Shader(const char* shader_source, const char* imagepath);
+            Shader(const char* shader_source);
             ~Shader();
             void Bind();
             void UnBind();
@@ -27,6 +27,7 @@ namespace GL
             unsigned int const GetProgram() const {return m_sProgram;}
 
             void Set4f(const char* name, const glm::vec4& color);
+            void Set3f(const char* name, const glm::vec3& color);
             void SetInt(const char* name, unsigned int index);
             void SetMat4(const char* name, const glm::mat4& trans);
 
@@ -37,7 +38,6 @@ namespace GL
             std::pair<std::string, std::string> ParserShaderFile(const char* shader_source);
         private:
             unsigned int                m_sProgram;
-            // std::unique_ptr<Texture>    m_Texture;
     };
 }
 

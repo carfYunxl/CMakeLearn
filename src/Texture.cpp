@@ -51,7 +51,7 @@ namespace GL
         glDeleteTextures(1, &texture);
     }
 
-    void Texture::Bind()
+    void Texture::Bind() const 
     {
         glBindTexture(GL_TEXTURE_2D, texture);
     }

@@ -65,15 +65,13 @@ namespace GL
     class Cube
     {
     public:
-        Cube(Shader& shader, const char* imagepath);
+        Cube(Shader& shader);
         ~Cube();
 
         void Draw(const Camera& camera, const glm::vec3& pos, float rotation, float scale);
     private:
         VertexArray                     m_vertexArray;
         std::unique_ptr<VertexBuffer>   m_vertexBuffer;
-        // std::unique_ptr<IndexBuffer>    m_indexBuffer;
-        // std::unique_ptr<Texture>        m_Texture;
         Shader&                         m_Shader;
 
         std::vector<float>              m_Vertices{

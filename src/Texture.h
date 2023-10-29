@@ -9,7 +9,8 @@ namespace GL
         Texture(const char* filepath);
         ~Texture();
 
-        void Bind();
+        void Bind() const ;
+        void UnBind() const { glBindTexture(GL_TEXTURE_2D, 0); }
 
         unsigned int const GetTexture() const {return texture;}
 

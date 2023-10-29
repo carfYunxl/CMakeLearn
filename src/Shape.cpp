@@ -1,7 +1,6 @@
 #include "Shape.h"
 #include "glad/glad.h"
 #include "VertextBuffer.h"
-// #include "Texture.h"
 #include "IndexBuffer.h"
 #include "glm/gtc/matrix_transform.hpp"
 #include "glfw3.h"
@@ -22,9 +21,6 @@ namespace GL
 
         glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
         glEnableVertexAttribArray(1);
-
-        // m_Texture = std::make_unique<Texture>(imagepath);
-        // m_Texture->Bind();
 
         m_vertexArray.UnBind();
     }
@@ -57,9 +53,6 @@ namespace GL
         glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
         glEnableVertexAttribArray(1);
 
-        // m_Texture = std::make_unique<Texture>(imagepath);
-        // m_Texture->Bind();
-
         m_vertexArray.UnBind();
     }
 
@@ -73,27 +66,20 @@ namespace GL
         m_vertexArray.Bind();
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT,0);
-        //m_vertexArray.UnBind();
     }
 
-    Cube::Cube(Shader& shader, const char* imagepath)
+    Cube::Cube(Shader& shader)
         : m_Shader(shader)
     {
         m_vertexArray.Bind();
         m_vertexBuffer = std::make_unique<VertexBuffer>(m_Vertices.data(), m_Vertices.size() * sizeof(float)); 
         m_vertexBuffer->Bind();
 
-        // m_indexBuffer = std::make_unique<IndexBuffer>(m_Indices.data(), m_Indices.size() * sizeof(unsigned int));
-        // m_indexBuffer->Bind();
-
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
         glEnableVertexAttribArray(0);
 
         glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
         glEnableVertexAttribArray(1);
-
-        // m_Texture = std::make_unique<Texture>(imagepath);
-        // m_Texture->Bind();
 
         m_vertexArray.UnBind();
     }
@@ -105,7 +91,6 @@ namespace GL
 
     void Cube::Draw(const Camera& camera, const glm::vec3& pos, float rotation, float scale)
     {
-        m_Shader.Set4f("u_Color", {1.0f, 0.5f, 0.2f, 1.0f });
         m_Shader.SetMat4(
             "u_Model", 
                 glm::rotate(
@@ -113,14 +98,14 @@ namespace GL
                     , glm::radians(rotation)
                     , {0,1,0}
                     ) *
-                glm::scale(
-                    glm::mat4(1.0f)
-                    , {scale,scale,scale}
-                    ) * 
                 glm::translate(
                     glm::mat4(1.0)
                     , {pos.x,pos.y,pos.z}
-                    )
+                    )*
+                glm::scale(
+                    glm::mat4(1.0f)
+                    , {scale,scale,scale}
+                ) 
                 );
         // view matrix
         m_Shader.SetMat4("u_View", camera.GetView());

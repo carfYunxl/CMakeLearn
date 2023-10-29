@@ -3,7 +3,7 @@
 
 namespace GL{
     Camera::Camera(float Aspectio)
-        : m_Aspectio(Aspectio), m_cPos{0.0f, 0.0f, 5.0f}, m_Yaw{-90.0f}, m_Pitch{0.0f}, m_Zoom{45.0f}
+        : m_Aspectio(Aspectio), m_cPos{120.0f, 50.0f, 120.0f}, m_Yaw{-135.0f}, m_Pitch{-45.0f}, m_Zoom{45.0f}
     {
         Update();
     }
@@ -27,6 +27,6 @@ namespace GL{
 
         m_View = glm::lookAt( m_cPos, m_cPos + m_cFront ,m_cUp );
 
-        m_Projection = glm::perspective(m_Zoom, m_Aspectio, 0.1f, 100.0f);
+        m_Projection = glm::perspective(m_Zoom, m_Aspectio, 0.1f, 1000.0f);
     }
 }

@@ -188,12 +188,18 @@ int main()
     glEnable(GL_DEPTH_TEST);
 
     std::filesystem::path path = std::filesystem::current_path();
-    std::filesystem::path sPath = path / "shaders" / "Basic.shader";
-    std::filesystem::path iPath = path / "texture" / "ww.jpg";
+    std::filesystem::path sPath = path / "shaders" / "Obj.shader";
+    std::filesystem::path lPath = path / "shaders" / "Light.shader";
+
+    std::filesystem::path iPath = path / "texture" / "wall.jpg";
     std::filesystem::path iiPath = path / "texture" / "container.jpg";
 
-    GL::Shader shader(sPath.string().c_str(), iPath.string().c_str());
-    GL::Cube cube(shader, iPath.string().c_str());
+    GL::Shader shader(sPath.string().c_str());
+    GL::Shader LightShader(lPath.string().c_str());
+
+    GL::Cube cube(shader);
+
+    GL::Cube LightCube(LightShader);
 
     GL::Texture texture1(iPath.string().c_str());
     GL::Texture texture2(iiPath.string().c_str());
@@ -208,19 +214,26 @@ int main()
 
         std::cout << "FPS = " << 1000 / m_TS.GetMilliseconds() << std::endl;
 
-        glClearColor(0.2f, 0.2f, 0.4f, 1.0f);
+        glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         shader.Bind();
+        shader.Set3f( "u_ObjColor", {1.0f, 0.5f, 0.31f});
+        shader.Set3f( "u_Light", {1.0f, 1.0f, 1.0f});
         texture2.Bind();
 
-        for(int i = 0;i < 10; ++i)
+        for(int i = 0;i < 50; ++i)
         {
-            for(int j = 0;j < 10; ++j)
+            for(int j = 0;j < 50; ++j)
             {
-                cube.Draw(camera, {0.0f + 1.2f * i, 0.0f + 1.2f * j, 0.0f}, 0.0f, 1.0f);
+                cube.Draw(camera, {0.0f + 3.0f * i, 0.0f, 0.0f + 3.0f * j}, 0.0f, 1.0f);
             }
         }
+        //texture2.UnBind();
+
+        LightShader.Bind();
+        texture1.Bind();
+        LightCube.Draw(camera, {75.0f, 10.0f, 75.0f}, 0.0f, 8.0f);
 
         glfwSwapBuffers(window);
         glfwPollEvents();
