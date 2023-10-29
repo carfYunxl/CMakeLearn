@@ -26,6 +26,7 @@ void ProcessKey(GLFWwindow* window, int key, int scancode, int action, int mods)
     //`GLFW_PRESS`, `GLFW_RELEASE` or `GLFW_REPEAT`
     float v = m_TS * camera.g_MoveSpeed;
     auto front = camera.GetFront();
+    auto right = camera.GetRight();
     auto up = camera.GetUp();
     switch(action)
     {
@@ -33,22 +34,22 @@ void ProcessKey(GLFWwindow* window, int key, int scancode, int action, int mods)
         {
             if(key == GLFW_KEY_W)
             {
-                camera.AddCameraPosZ(-v);
+                camera.AddCameraPos(v * front);
             }
 
             if(key == GLFW_KEY_S)
             {
-                camera.AddCameraPosZ(v);
+                camera.SubCameraPos(v * front);
             }
 
             if(GLFW_KEY_A == key)
             {
-                camera.AddCameraPosX(-v);
+                camera.SubCameraPos(v * glm::normalize(glm::cross(front,up)));
             }
 
             if(GLFW_KEY_D == key)
             {
-                camera.AddCameraPosX(v);
+                camera.AddCameraPos(v * glm::normalize(glm::cross(front,up)));
             }
 
             if(key == GLFW_KEY_ESCAPE)
@@ -58,12 +59,12 @@ void ProcessKey(GLFWwindow* window, int key, int scancode, int action, int mods)
 
             if(key == GLFW_KEY_Q)
             {
-                camera.AddCameraPosY(v);
+                camera.AddCameraPos(v * up);
             }
 
             if(key == GLFW_KEY_E)
             {
-                camera.AddCameraPosY(-v);
+                camera.SubCameraPos(v * up);
             }
         }
         break;
@@ -71,32 +72,32 @@ void ProcessKey(GLFWwindow* window, int key, int scancode, int action, int mods)
         {
             if(key == GLFW_KEY_W)
             {
-                camera.AddCameraPosZ(-v);
+                camera.AddCameraPos(v * front);
             }
 
             if(key == GLFW_KEY_S)
             {
-                camera.AddCameraPosZ(v);
+                camera.SubCameraPos(v * front);
             }
 
             if(GLFW_KEY_A == key)
             {
-                camera.AddCameraPosX(-v);
+                camera.AddCameraPos(-v * glm::normalize(glm::cross(front,up)));
             }
 
             if(GLFW_KEY_D == key)
             {
-                camera.AddCameraPosX(v);
+                camera.AddCameraPos(v * glm::normalize(glm::cross(front,up)));
             }
 
             if(key == GLFW_KEY_Q)
             {
-                camera.AddCameraPosY(v);
+                camera.AddCameraPos(v * up);
             }
 
             if(key == GLFW_KEY_E)
             {
-                camera.AddCameraPosY(-v);
+                camera.AddCameraPos(-v * up);
             }
         }
         break;
@@ -205,15 +206,21 @@ int main()
         m_TS = time - m_lastFrameTime;
         m_lastFrameTime = time;
 
-        //std::cout << "FPS = " << 1000 / ts.GetMilliseconds() << std::endl;
+        std::cout << "FPS = " << 1000 / m_TS.GetMilliseconds() << std::endl;
 
         glClearColor(0.2f, 0.2f, 0.4f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         shader.Bind();
-        texture1.Bind();
+        texture2.Bind();
 
-        cube.Draw(camera, {0.0f, 0.0f, 0.0f}, 0.0f, 1.0f);
+        for(int i = 0;i < 10; ++i)
+        {
+            for(int j = 0;j < 10; ++j)
+            {
+                cube.Draw(camera, {0.0f + 1.2f * i, 0.0f + 1.2f * j, 0.0f}, 0.0f, 1.0f);
+            }
+        }
 
         glfwSwapBuffers(window);
         glfwPollEvents();

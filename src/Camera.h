@@ -7,8 +7,8 @@ namespace GL{
 
     constexpr glm::vec3 g_Up{0.0f, 1.0f, 0.0f}; //全局坐标系上向量
 
-    constexpr int WIDTH = 1920;
-    constexpr int HEIGHT = 1080;
+    constexpr int WIDTH = 2560;
+    constexpr int HEIGHT = 1440;
 
     class Camera
     {
@@ -28,9 +28,8 @@ namespace GL{
 
         const glm::vec3& GetCameraPos() const { return m_cPos; }
         void SetCameraPos(const glm::vec3& pos) { m_cPos = pos; Update(); }
-        void AddCameraPosX(float addX) { m_cPos.x += addX; Update(); }
-        void AddCameraPosY(float addY) { m_cPos.y += addY; Update(); }
-        void AddCameraPosZ(float addZ) { m_cPos.z += addZ; Update(); }
+        void AddCameraPos(const glm::vec3& add) { m_cPos += add; Update(); }
+        void SubCameraPos(const glm::vec3& add) { m_cPos -= add; Update(); }
 
         const glm::mat4 GetProjection() const {return m_Projection;}
 
