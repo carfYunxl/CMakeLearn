@@ -7,8 +7,8 @@ namespace GL{
 
     constexpr glm::vec3 g_Up{0.0f, 1.0f, 0.0f}; //全局坐标系上向量
 
-    constexpr int WIDTH = 2560;
-    constexpr int HEIGHT = 1440;
+    constexpr int WIDTH = 1920;
+    constexpr int HEIGHT = 1080;
 
     class Camera
     {
@@ -69,7 +69,7 @@ namespace GL{
         bool g_isFirstMouse {true};
         float g_LastX{WIDTH/2};
         float g_LastY{HEIGHT/2};
-        float g_MoveSpeed{90.0f};
+        float g_MoveSpeed{190.0f};
         float g_Sensitivity{0.1f};
     };
 

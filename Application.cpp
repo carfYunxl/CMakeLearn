@@ -10,8 +10,17 @@
 #include "TimeStep.h"
 #include "Camera.h"
 
+#include "imgui.h"
+#include "imgui_impl_glfw.h"
+#include "imgui_impl_opengl3.h"
+
+#include "glfw3.h"
+
 static float m_lastFrameTime = 0.0f;
 static GL::Timestep m_TS = 0.0f;
+static float g_LightX = 0.0f;
+static float g_LightY = 12.0f;
+static float g_LightZ = 0.0f;
 
 GL::Camera camera(1.778f);
 
@@ -66,6 +75,26 @@ void ProcessKey(GLFWwindow* window, int key, int scancode, int action, int mods)
             {
                 camera.SubCameraPos(v * up);
             }
+
+            if(key == GLFW_KEY_LEFT)
+            {
+                g_LightX -= v;
+            }
+
+            if(key == GLFW_KEY_RIGHT)
+            {
+                g_LightX += v;
+            }
+
+            if(key == GLFW_KEY_UP)
+            {
+                g_LightZ -= v;
+            }
+
+            if(key == GLFW_KEY_DOWN)
+            {
+                g_LightZ += v;
+            }
         }
         break;
         case GLFW_REPEAT:
@@ -99,6 +128,26 @@ void ProcessKey(GLFWwindow* window, int key, int scancode, int action, int mods)
             {
                 camera.AddCameraPos(-v * up);
             }
+
+            if(key == GLFW_KEY_LEFT)
+            {
+                g_LightX -= v;
+            }
+
+            if(key == GLFW_KEY_RIGHT)
+            {
+                g_LightX += v;
+            }
+
+            if(key == GLFW_KEY_UP)
+            {
+                g_LightZ -= v;
+            }
+
+            if(key == GLFW_KEY_DOWN)
+            {
+                g_LightZ += v;
+            }
         }
         break;
     }
@@ -106,6 +155,7 @@ void ProcessKey(GLFWwindow* window, int key, int scancode, int action, int mods)
 
 void ProcessMousePos(GLFWwindow* window, double xpos, double ypos)
 {
+    return;
     float x = static_cast<float>(xpos);
     float y = static_cast<float>(ypos);
 
@@ -160,12 +210,14 @@ int main()
 {
     if(!glfwInit())
         return -1; 
+
     GLFWwindow* window = glfwCreateWindow(GL::WIDTH, GL::HEIGHT, "My Title", nullptr, nullptr);
     if(!window)
     {
         glfwTerminate();
         return -1;
     }
+
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -175,15 +227,28 @@ int main()
     glfwSetCursorPosCallback(window,ProcessMousePos);
     glfwSetWindowSizeCallback(window, ProcessWinResize);
     glfwSetScrollCallback(window, ProcessMouseScroll);
-    glfwMakeContextCurrent(window);
 
-    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    glfwMakeContextCurrent(window);
+    glfwSwapInterval(1); // 开启垂直同步
+
+    //glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     if(!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
     {
         std::cout << "Failed to initialize GLAD" << std::endl;
         return -1;
     }
+
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGuiIO& io = ImGui::GetIO();
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+    //io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;         // IF using Docking Branch
+
+    //Setup Platform/Renderer backends
+    ImGui_ImplGlfw_InitForOpenGL(window, true);          // Second param install_callback=true will install GLFW callbacks and chain to existing ones.
+    ImGui_ImplOpenGL3_Init("#version 410");
 
     glEnable(GL_DEPTH_TEST);
 
@@ -208,36 +273,66 @@ int main()
 
     while (!glfwWindowShouldClose(window)) 
     {
+        glfwPollEvents();
+
         float time = glfwGetTime();
         m_TS = time - m_lastFrameTime;
         m_lastFrameTime = time;
 
-        std::cout << "FPS = " << 1000 / m_TS.GetMilliseconds() << std::endl;
+        //std::cout << "FPS = " << 1000 / m_TS.GetMilliseconds() << std::endl;
+
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
+        ImGui::NewFrame();
+
+        {
+            ImGui::Begin("Test");
+
+            ImGui::Text("Hello World!");
+
+            float arr[4];
+            if( ImGui::ColorPicker4("Color",arr) )
+            {
+                ImGui::Text("change color %d %d %d %d", arr[0], arr[1], arr[2], arr[3]);
+            }
+
+            ImGui::End();
+        }
 
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         shader.Bind();
         shader.Set3f( "u_ObjColor", {1.0f, 0.5f, 0.31f});
-        shader.Set3f( "u_Light", {1.0f, 1.0f, 1.0f});
+        shader.Set3f( "u_LightColor", {1.0f, 1.0f, 1.0f});
+        shader.Set3f( "u_LightPos", {g_LightX, g_LightY, g_LightZ});
+        shader.Set3f( "u_ViewPos", camera.GetCameraPos());
         texture2.Bind();
 
-        for(int i = 0;i < 50; ++i)
-        {
-            for(int j = 0;j < 50; ++j)
-            {
-                cube.Draw(camera, {0.0f + 3.0f * i, 0.0f, 0.0f + 3.0f * j}, 0.0f, 1.0f);
-            }
-        }
+        // for(int i = -25; i < 25; ++i)
+        // {
+        //     for(int j = -25; j < 25; ++j)
+        //     {
+        //         cube.Draw(camera, {0.0f + 3.0f * i, 0.0f, 0.0f + 3.0f * j}, 0.0f, {1.0f, 1.0f, 1.0f});
+        //     }
+        // }
+        cube.Draw(camera, {0.0f, 0.0f, 0.0f}, 0.0f, {150.0f, 1.0f, 150.0f});
         //texture2.UnBind();
 
         LightShader.Bind();
         texture1.Bind();
-        LightCube.Draw(camera, {75.0f, 10.0f, 75.0f}, 0.0f, 8.0f);
+        LightCube.Draw(camera, {g_LightX, g_LightY, g_LightZ}, 0.0f, {5.0f, 5.0f, 5.0f});
+
+        ImGui::Render();
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
         glfwSwapBuffers(window);
-        glfwPollEvents();
+
     }
+
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
+    ImGui::DestroyContext();
 
     glfwDestroyWindow(window);
     glfwTerminate();

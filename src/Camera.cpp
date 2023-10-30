@@ -3,7 +3,7 @@
 
 namespace GL{
     Camera::Camera(float Aspectio)
-        : m_Aspectio(Aspectio), m_cPos{120.0f, 50.0f, 120.0f}, m_Yaw{-135.0f}, m_Pitch{-45.0f}, m_Zoom{45.0f}
+        : m_Aspectio(Aspectio), m_cPos{80.0f, 80.0f, 80.0f}, m_Yaw{-135.0f}, m_Pitch{-45.0f}, m_Zoom{45.0f}
     {
         Update();
     }

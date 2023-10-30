@@ -2,7 +2,6 @@
 #define PCH_H_
 
 #include "glad/glad.h"
-#include "glfw3.h"
 
 #include <iostream>
 #include <vector>

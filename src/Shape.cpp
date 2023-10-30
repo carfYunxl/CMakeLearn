@@ -75,11 +75,14 @@ namespace GL
         m_vertexBuffer = std::make_unique<VertexBuffer>(m_Vertices.data(), m_Vertices.size() * sizeof(float)); 
         m_vertexBuffer->Bind();
 
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
         glEnableVertexAttribArray(0);
 
-        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
         glEnableVertexAttribArray(1);
+
+        glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(5 * sizeof(float)));
+        glEnableVertexAttribArray(2);
 
         m_vertexArray.UnBind();
     }
@@ -89,7 +92,7 @@ namespace GL
         m_vertexArray.UnBind();
     }
 
-    void Cube::Draw(const Camera& camera, const glm::vec3& pos, float rotation, float scale)
+    void Cube::Draw(const Camera& camera, const glm::vec3& pos, float rotation, const glm::vec3& scale)
     {
         m_Shader.SetMat4(
             "u_Model", 
@@ -104,7 +107,7 @@ namespace GL
                     )*
                 glm::scale(
                     glm::mat4(1.0f)
-                    , {scale,scale,scale}
+                    , scale
                 ) 
                 );
         // view matrix
