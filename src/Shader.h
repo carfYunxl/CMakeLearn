@@ -29,6 +29,7 @@ namespace GL
             void Set4f(const char* name, const glm::vec4& color);
             void Set3f(const char* name, const glm::vec3& color);
             void SetInt(const char* name, unsigned int index);
+            void SetFloat(const char* name, float val);
             void SetMat4(const char* name, const glm::mat4& trans);
 
         private:

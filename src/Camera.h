@@ -54,6 +54,11 @@ namespace GL{
 
 
         void Update();
+
+        glm::vec3& CameraPos() { return m_cPos; }
+        float* Yaw(){return &m_Yaw;}
+        float* Pitch(){return &m_Pitch;}
+
     private:
         glm::vec3   m_cPos;     //camera pos
         glm::vec3   m_cFront;   //camera front

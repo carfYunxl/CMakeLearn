@@ -72,8 +72,20 @@ namespace GL
 
         {
             ImGui::Begin("Camera Settings");
-            ImGui::Text("Camera Position : %.2f, %.2f, %.2f", camera.GetCameraPos().x, camera.GetCameraPos().y, camera.GetCameraPos().z);
-            ImGui::Text("Yaw : %.2f", camera.GetYaw());
+            if(ImGui::InputFloat3("Position", glm::value_ptr(camera.CameraPos())))
+            {
+                camera.Update();
+            }
+            
+            if( ImGui::InputFloat("Yaw", camera.Yaw(), 0.0f,0.0f,"Hello") )
+            {
+                camera.Update();
+            }
+
+            if( ImGui::InputFloat("Pitch", camera.Pitch() , 0.0f,0.0f,"Hello"))
+            {
+                camera.Update();
+            }
             ImGui::End();
         }
     }

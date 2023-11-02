@@ -306,9 +306,21 @@ int main()
 
         shader.Bind();
         shader.Set3f( "u_ObjColor",     g_SceneData.m_ObjColor);
-        shader.Set3f( "u_LightColor",   g_SceneData.m_LightColor);
         shader.Set3f( "u_LightPos",     g_SceneData.m_LightPos);
         shader.Set3f( "u_ViewPos",      g_Camera.GetCameraPos());
+        shader.Set3f( "u_LightColor",   g_SceneData.m_LightColor);
+
+        shader.Set3f("material.ambient",  {1.0f, 0.5f, 0.31f});
+        shader.Set3f("material.diffuse",  {1.0f, 0.5f, 0.31f});
+        shader.Set3f("material.specular", {0.5f, 0.5f, 0.5f});
+        shader.SetFloat("material.shininess", 32.0f);
+
+        glm::vec3 diffuseColor = g_SceneData.m_LightColor * glm::vec3(0.5f); // 降低影响
+        glm::vec3 ambientColor = diffuseColor * glm::vec3(0.2f); // 很低的影响
+
+        shader.Set3f("u_LightColor.ambient",  ambientColor);
+        shader.Set3f("u_LightColor.diffuse",  diffuseColor); // 将光照调暗了一些以搭配场景
+        shader.Set3f("u_LightColor.specular", {1.0f, 1.0f, 1.0f}); 
         texture1.Bind();
 
         // for(int i = -25; i < 25; ++i)
@@ -321,7 +333,7 @@ int main()
         cube.Draw(g_Camera, g_SceneData.m_ObjPos, g_SceneData.m_ObjRotation, g_SceneData.m_ObjScale);
 
         LightShader.Bind();
-        LightShader.Set3f("u_LightObjColor",   g_SceneData.m_LightColor);
+        LightShader.Set3f("u_LightObjColor",  g_SceneData.m_LightColor);
         texture1.Bind();
         LightCube.Draw(g_Camera, g_SceneData.m_LightPos, g_SceneData.m_LightRotation, g_SceneData.m_LightScale);
 

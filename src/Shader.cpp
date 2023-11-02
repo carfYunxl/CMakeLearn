@@ -136,6 +136,12 @@ namespace GL
         glUniform3f(nLoc, color.x, color.y, color.z);
     }
 
+    void Shader::SetFloat(const char* name, float val)
+    {
+        int nLoc = glGetUniformLocation(m_sProgram, name);
+        glUniform1f(nLoc, val);
+    }
+
     void Shader::SetInt(const char* name, unsigned int index)
     {
         int nLoc = glGetUniformLocation(m_sProgram, name);
