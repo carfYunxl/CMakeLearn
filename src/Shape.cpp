@@ -92,15 +92,25 @@ namespace GL
         m_vertexArray.UnBind();
     }
 
-    void Cube::Draw(const Camera& camera, const glm::vec3& pos, float rotation, const glm::vec3& scale)
+    void Cube::Draw(const Camera& camera, const glm::vec3& pos, const glm::vec3& rotation, const glm::vec3& scale)
     {
         m_Shader.SetMat4(
             "u_Model", 
                 glm::rotate(
                     glm::mat4(1.0f) 
-                    , glm::radians(rotation)
-                    , {0,1,0}
+                    , glm::radians(rotation.x)
+                    , {1,0,0}
                     ) *
+                glm::rotate(
+                    glm::mat4(1.0f) 
+                    , glm::radians(rotation.y)
+                    , {0,1,0}
+                ) *
+                glm::rotate(
+                    glm::mat4(1.0f) 
+                    , glm::radians(rotation.z)
+                    , {0,0,1}
+                ) *
                 glm::translate(
                     glm::mat4(1.0)
                     , {pos.x,pos.y,pos.z}

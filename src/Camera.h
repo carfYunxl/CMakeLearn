@@ -5,10 +5,13 @@
 
 namespace GL{
 
-    constexpr glm::vec3 g_Up{0.0f, 1.0f, 0.0f}; //全局坐标系上向量
-
-    constexpr int WIDTH = 1920;
-    constexpr int HEIGHT = 1080;
+    struct CameraData
+    {
+        glm::vec3   m_GlobalUp{0.0f, 1.0f, 0.0f}; //全局坐标系上向量
+        bool        m_isFirstMouse {true};
+        float       m_MoveSpeed{190.0f};
+        float       m_Sensitivity{0.1f};
+    };
 
     class Camera
     {
@@ -66,11 +69,7 @@ namespace GL{
         float       m_Zoom{45.0f};
         float       m_Aspectio{1.778f};
     public:
-        bool g_isFirstMouse {true};
-        float g_LastX{WIDTH/2};
-        float g_LastY{HEIGHT/2};
-        float g_MoveSpeed{190.0f};
-        float g_Sensitivity{0.1f};
+        CameraData  m_Data;
     };
 
 }

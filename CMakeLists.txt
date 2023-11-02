@@ -5,31 +5,27 @@ set(CMAKE_C_STANDARD 17)
 
 project(app)
 
-aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/src SRC_LIST)
-aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/stb STB_SRC_LIST)
-aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/IMGUI IMGUI_SRC_LIST)
+aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/src SRC)
+aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/GLAD/src SRC_GLAD)
+aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/stb SRC_STB)
+aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/imgui IMGUI_SRC1)
+aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/imgui/backends IMGUI_SRC2)
 
 set(LIB_PATH ${CMAKE_CURRENT_SOURCE_DIR}/lib)
 
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_SOURCE_DIR}/bin)
 
-set(GLAD_LIB glad)
-add_subdirectory(glad)
-
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/glm)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/stb)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/IMGUI)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/GLAD/include/)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/GLAD/include/KHR/)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/imgui)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/imgui/backends)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/GLAD/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/GLFW/include)
 
 link_directories(${CMAKE_CURRENT_SOURCE_DIR}/GLFW/lib)
-link_directories(${CMAKE_CURRENT_SOURCE_DIR}/lib/Debug)
 
-link_libraries(glfw3.lib opengl32.lib glad.lib)
+link_libraries(glfw3.lib opengl32.lib)
 
-add_executable(app ${SRC_LIST} ${STB_SRC_LIST} ${IMGUI_SRC_LIST} Application.cpp)
-
-#target_link_libraries(app glfw3 opengl32 glad ImGui)
+add_executable(app ${SRC} ${SRC_STB} ${IMGUI_SRC1}  ${IMGUI_SRC2} ${SRC_GLAD} Application.cpp)

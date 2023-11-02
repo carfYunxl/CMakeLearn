@@ -22,7 +22,7 @@ namespace GL{
             };
 
         m_cFront = glm::normalize(cmFront);
-        m_cRight = glm::normalize(glm::cross(m_cFront,g_Up));
+        m_cRight = glm::normalize(glm::cross(m_cFront,m_Data.m_GlobalUp));
         m_cUp = glm::normalize(glm::cross(m_cRight,m_cFront));
 
         m_View = glm::lookAt( m_cPos, m_cPos + m_cFront ,m_cUp );

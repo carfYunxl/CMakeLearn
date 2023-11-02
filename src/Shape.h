@@ -68,7 +68,7 @@ namespace GL
         Cube(Shader& shader);
         ~Cube();
 
-        void Draw(const Camera& camera, const glm::vec3& pos, float rotation, const glm::vec3& scale);
+        void Draw(const Camera& camera, const glm::vec3& pos, const glm::vec3& rotation, const glm::vec3& scale);
     private:
         VertexArray                     m_vertexArray;
         std::unique_ptr<VertexBuffer>   m_vertexBuffer;
