@@ -153,4 +153,12 @@ namespace GL
         int nLoc = glGetUniformLocation(m_sProgram, name);
         glUniformMatrix4fv(nLoc, 1, GL_FALSE, glm::value_ptr(trans));
     }
+
+    // void Shader::SetUniformAttr(const Attribute& data)
+    // {
+    //     shader.Set3f( "u_ObjColor",     cubeAttr.m_Color);
+    //     shader.Set3f( "u_LightPos",     LightAttr.m_Pos);
+    //     shader.Set3f( "u_ViewPos",      g_Camera.GetCameraPos());
+    //     shader.Set3f( "u_LightColor",   g_SceneData.m_LightColor);
+    // }
 }

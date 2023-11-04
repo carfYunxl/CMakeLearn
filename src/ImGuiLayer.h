@@ -14,10 +14,9 @@ namespace GL
         static void OnDestroy();
         static void Begin();
         static void End(int width, int height);
-        static void OnUpdate(SceneData& data, Camera& camera);
+        static void OnUpdate(Attribute& data, const char* title);
+        static void OnUpdate(Camera& camera);
     };
-
-    static ImGuiLayer m_ImGuiLayer;
 }
 
 

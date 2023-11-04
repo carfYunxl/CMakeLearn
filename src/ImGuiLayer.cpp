@@ -50,43 +50,33 @@ namespace GL
         ImGui_ImplGlfw_Shutdown();
         ImGui::DestroyContext();
     }
-    void ImGuiLayer::OnUpdate(SceneData& data, Camera& camera)
+    void ImGuiLayer::OnUpdate(Attribute& data, const char* title)
     {
+        ImGui::Begin(title);
+        ImGui::DragFloat3("Position", glm::value_ptr(data.m_Pos));
+        ImGui::DragFloat3("Rotation", glm::value_ptr(data.m_Rotation));
+        ImGui::DragFloat3("Scale", glm::value_ptr(data.m_Scale));
+        ImGui::ColorPicker3("Color", glm::value_ptr(data.m_Color));
+        ImGui::End();
+    }
+
+    void ImGuiLayer::OnUpdate(Camera& camera)
+    {
+        ImGui::Begin("Camera Settings");
+        if(ImGui::InputFloat3("Position", glm::value_ptr(camera.CameraPos())))
         {
-            ImGui::Begin("Object Settings");
-            ImGui::ColorPicker3("Color", glm::value_ptr(data.m_ObjColor));
-            ImGui::DragFloat3("Position", glm::value_ptr(data.m_ObjPos));
-            ImGui::DragFloat3("Rotation", glm::value_ptr(data.m_ObjRotation));
-            ImGui::DragFloat3("Scale", glm::value_ptr(data.m_ObjScale));
-            ImGui::End();
+            camera.Update();
+        }
+        
+        if( ImGui::InputFloat("Yaw", camera.Yaw(), 0.0f,0.0f,"Hello") )
+        {
+            camera.Update();
         }
 
+        if( ImGui::InputFloat("Pitch", camera.Pitch() , 0.0f,0.0f,"Hello"))
         {
-            ImGui::Begin("Light Settings");
-            ImGui::ColorPicker3("Color", glm::value_ptr(data.m_LightColor));
-            ImGui::DragFloat3("Position", glm::value_ptr(data.m_LightPos));
-            ImGui::DragFloat3("Rotation", glm::value_ptr(data.m_LightRotation));
-            ImGui::DragFloat3("Scale", glm::value_ptr(data.m_LightScale));
-            ImGui::End();
+            camera.Update();
         }
-
-        {
-            ImGui::Begin("Camera Settings");
-            if(ImGui::InputFloat3("Position", glm::value_ptr(camera.CameraPos())))
-            {
-                camera.Update();
-            }
-            
-            if( ImGui::InputFloat("Yaw", camera.Yaw(), 0.0f,0.0f,"Hello") )
-            {
-                camera.Update();
-            }
-
-            if( ImGui::InputFloat("Pitch", camera.Pitch() , 0.0f,0.0f,"Hello"))
-            {
-                camera.Update();
-            }
-            ImGui::End();
-        }
+        ImGui::End();
     }
 }

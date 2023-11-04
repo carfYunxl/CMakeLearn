@@ -4,6 +4,7 @@
 #include "glm.hpp"
 #include <memory>
 #include <string>
+#include "Data.h"
 
 namespace GL
 {
@@ -31,6 +32,8 @@ namespace GL
             void SetInt(const char* name, unsigned int index);
             void SetFloat(const char* name, float val);
             void SetMat4(const char* name, const glm::mat4& trans);
+
+            //void SetUniformAttr(const Attribute& data);
 
         private:
             unsigned int    Compile(const char* shader, unsigned int type);

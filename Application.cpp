@@ -19,9 +19,33 @@
 #include "glfw3.h"
 #include "gtc/type_ptr.hpp"
 
-static GL::SceneData g_SceneData;
+static GL::GlobalData g_Data;
 
 static GL::Camera g_Camera(1.778f);
+
+GL::Attribute cubeAttr
+{
+    {0.0f, 0.0f, 0.0f},
+    {0.0f, 0.0f, 0.0f},
+    {100.0f, 5.0f, 100.0f},
+    {1.0f, 0.5f, 0.31f}
+};
+
+GL::Attribute AnotherCubeAttr
+{
+    {-50.0f, 0.0f, 0.0f},
+    {0.0f, 0.0f, 0.0f},
+    {5.0f, 100.0f, 100.0f},
+    {1.0f, 0.5f, 0.31f}
+};
+
+GL::Attribute LightAttr
+{
+    {0.0f, 20.0f, 0.0f},
+    {0.0f, 0.0f, 0.0f},
+    {5.0f, 5.0f, 5.0f},
+    {1.0f, 1.0f, 1.0f}
+};
 
 void ProcessError(int error_code, const char* description)
 {
@@ -32,7 +56,7 @@ void ProcessError(int error_code, const char* description)
 void ProcessKey(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
     //`GLFW_PRESS`, `GLFW_RELEASE` or `GLFW_REPEAT`
-    float v = g_SceneData.m_TS * g_Camera.m_Data.m_MoveSpeed;
+    float v = g_Data.m_TS * g_Camera.m_Data.m_MoveSpeed;
     auto front = g_Camera.GetFront();
     auto right = g_Camera.GetRight();
     auto up = g_Camera.GetUp();
@@ -77,22 +101,22 @@ void ProcessKey(GLFWwindow* window, int key, int scancode, int action, int mods)
 
             if(key == GLFW_KEY_LEFT)
             {
-                g_SceneData.m_LightPos.x -= v;
+                LightAttr.m_Pos.x -= v;
             }
 
             if(key == GLFW_KEY_RIGHT)
             {
-                g_SceneData.m_LightPos.x += v;
+                LightAttr.m_Pos.x += v;
             }
 
             if(key == GLFW_KEY_UP)
             {
-                g_SceneData.m_LightPos.z -= v;
+                LightAttr.m_Pos.z -= v;
             }
 
             if(key == GLFW_KEY_DOWN)
             {
-                g_SceneData.m_LightPos.z += v;
+                LightAttr.m_Pos.z += v;
             }
         }
         break;
@@ -130,22 +154,22 @@ void ProcessKey(GLFWwindow* window, int key, int scancode, int action, int mods)
 
             if(key == GLFW_KEY_LEFT)
             {
-                g_SceneData.m_LightPos.x -= v;
+                LightAttr.m_Pos.x -= v;
             }
 
             if(key == GLFW_KEY_RIGHT)
             {
-                g_SceneData.m_LightPos.x += v;
+                LightAttr.m_Pos.x += v;
             }
 
             if(key == GLFW_KEY_UP)
             {
-                g_SceneData.m_LightPos.z -= v;
+                LightAttr.m_Pos.z -= v;
             }
 
             if(key == GLFW_KEY_DOWN)
             {
-                g_SceneData.m_LightPos.z += v;
+                LightAttr.m_Pos.z += v;
             }
         }
         break;
@@ -160,16 +184,16 @@ void ProcessMousePos(GLFWwindow* window, double xpos, double ypos)
 
     if (g_Camera.m_Data.m_isFirstMouse)
     {
-        g_SceneData.m_LastX = x;
-        g_SceneData.m_LastY = y;
+        g_Data.m_LastX = x;
+        g_Data.m_LastY = y;
         g_Camera.m_Data.m_isFirstMouse = false;
     }
 
-    float xoffset = x - g_SceneData.m_LastX;
-    float yoffset = g_SceneData.m_LastY - y;
+    float xoffset = x - g_Data.m_LastX;
+    float yoffset = g_Data.m_LastY - y;
 
-    g_SceneData.m_LastX = x;
-    g_SceneData.m_LastY = y;
+    g_Data.m_LastX = x;
+    g_Data.m_LastY = y;
 
     xoffset *= g_Camera.m_Data.m_Sensitivity;
     yoffset *= g_Camera.m_Data.m_Sensitivity;
@@ -192,8 +216,8 @@ void ProcessWinResize(GLFWwindow* window, int width, int height)
 
     g_Camera.SetAspectio((float)width / (float)height);
 
-    g_SceneData.m_WIDTH = width;
-    g_SceneData.m_HEIGHT = height;
+    g_Data.m_WIDTH = width;
+    g_Data.m_HEIGHT = height;
 }
 
 void ProcessMouseScroll(GLFWwindow* window, double xoffset, double yoffset)
@@ -213,7 +237,7 @@ int main()
     if(!glfwInit())
         return -1; 
 
-    GLFWwindow* window = glfwCreateWindow(g_SceneData.m_WIDTH, g_SceneData.m_HEIGHT, "My Title", nullptr, nullptr);
+    GLFWwindow* window = glfwCreateWindow(g_Data.m_WIDTH, g_Data.m_HEIGHT, "My Title", nullptr, nullptr);
     if(!window)
     {
         glfwTerminate();
@@ -240,21 +264,8 @@ int main()
         std::cout << "Failed to initialize GLAD" << std::endl;
         return -1;
     }
-
     GL::ImGuiLayer::OnInit(window);
 
-#ifdef IM
-    IMGUI_CHECKVERSION();
-    ImGui::CreateContext();
-    ImGuiIO& io = ImGui::GetIO();
-    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
-    io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
-    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;         // IF using Docking Branch
-
-    // Setup Platform/Renderer backends
-    ImGui_ImplGlfw_InitForOpenGL(window, true);          // Second param install_callback=true will install GLFW callbacks and chain to existing ones.
-    ImGui_ImplOpenGL3_Init();
-#endif
     glEnable(GL_DEPTH_TEST);
 
     std::filesystem::path path = std::filesystem::current_path();
@@ -268,7 +279,6 @@ int main()
     GL::Shader LightShader(lPath.string().c_str());
 
     GL::Cube cube(shader);
-
     GL::Cube LightCube(LightShader);
 
     GL::Texture texture1(iPath.string().c_str());
@@ -282,73 +292,52 @@ int main()
 
         GL::ImGuiLayer::Begin();
 
-        GL::ImGuiLayer::OnUpdate(g_SceneData, g_Camera);
+        GL::ImGuiLayer::OnUpdate(cubeAttr,"Obj");
+        GL::ImGuiLayer::OnUpdate(AnotherCubeAttr,"Ano Obj");
+        GL::ImGuiLayer::OnUpdate(LightAttr, "Light");
+        GL::ImGuiLayer::OnUpdate(g_Camera);
 
-#ifdef IM
-        ImGui_ImplOpenGL3_NewFrame();
-        ImGui_ImplGlfw_NewFrame();
-        ImGui::NewFrame();
-#endif
         float time = glfwGetTime();
-        g_SceneData.m_TS = time - g_SceneData.m_lastFrameTime;
-        g_SceneData.m_lastFrameTime = time;
-#ifdef IM
-        ImGui::Begin("Test");
+        g_Data.m_TS = time - g_Data.m_lastFrameTime;
+        g_Data.m_lastFrameTime = time;
 
-        ImGui::ColorPicker3("Color", glm::value_ptr(GL::g_SceneData.m_ObjColor));
-
-        ImGui::End();
-#endif
         //std::cout << "FPS = " << 1000 / GL::g_SceneData.m_TS.GetMilliseconds() << std::endl;
 
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         shader.Bind();
-        shader.Set3f( "u_ObjColor",     g_SceneData.m_ObjColor);
-        shader.Set3f( "u_LightPos",     g_SceneData.m_LightPos);
+        //shader.Set3f( "u_ObjColor",     cubeAttr.m_Color);
+        shader.Set3f( "u_LightPos",     LightAttr.m_Pos);
         shader.Set3f( "u_ViewPos",      g_Camera.GetCameraPos());
-        shader.Set3f( "u_LightColor",   g_SceneData.m_LightColor);
+        //shader.Set3f( "u_LightColor",   LightAttr.m_Color);
 
         shader.Set3f("material.ambient",  {1.0f, 0.5f, 0.31f});
         shader.Set3f("material.diffuse",  {1.0f, 0.5f, 0.31f});
         shader.Set3f("material.specular", {0.5f, 0.5f, 0.5f});
         shader.SetFloat("material.shininess", 32.0f);
 
-        glm::vec3 diffuseColor = g_SceneData.m_LightColor * glm::vec3(0.5f); // 降低影响
+        glm::vec3 diffuseColor = LightAttr.m_Color * glm::vec3(0.5f); // 降低影响
         glm::vec3 ambientColor = diffuseColor * glm::vec3(0.2f); // 很低的影响
 
         shader.Set3f("u_LightColor.ambient",  ambientColor);
         shader.Set3f("u_LightColor.diffuse",  diffuseColor); // 将光照调暗了一些以搭配场景
         shader.Set3f("u_LightColor.specular", {1.0f, 1.0f, 1.0f}); 
         texture1.Bind();
+        cube.Draw(g_Camera, cubeAttr.m_Pos, cubeAttr.m_Rotation, cubeAttr.m_Scale);
 
-        // for(int i = -25; i < 25; ++i)
-        // {
-        //     for(int j = -25; j < 25; ++j)
-        //     {
-        //         cube.Draw(g_Camera, {0.0f + 3.0f * i, 0.0f, 0.0f + 3.0f * j}, 0.0f, {1.0f, 1.0f, 1.0f});
-        //     }
-        // }
-        cube.Draw(g_Camera, g_SceneData.m_ObjPos, g_SceneData.m_ObjRotation, g_SceneData.m_ObjScale);
+        cube.Draw(g_Camera, AnotherCubeAttr.m_Pos, AnotherCubeAttr.m_Rotation, AnotherCubeAttr.m_Scale);
 
         LightShader.Bind();
-        LightShader.Set3f("u_LightObjColor",  g_SceneData.m_LightColor);
+        LightShader.Set3f("u_LightObjColor",  LightAttr.m_Color);
         texture1.Bind();
-        LightCube.Draw(g_Camera, g_SceneData.m_LightPos, g_SceneData.m_LightRotation, g_SceneData.m_LightScale);
+        LightCube.Draw(g_Camera, LightAttr.m_Pos, LightAttr.m_Rotation, LightAttr.m_Scale);
 
-        GL::ImGuiLayer::End(g_SceneData.m_WIDTH,g_SceneData.m_HEIGHT);
-#ifdef IM
-        ImGui::Render();
-        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-#endif
+        GL::ImGuiLayer::End(g_Data.m_WIDTH,g_Data.m_HEIGHT);
+
         glfwSwapBuffers(window);
     }
-#ifdef IM
-    ImGui_ImplOpenGL3_Shutdown();
-    ImGui_ImplGlfw_Shutdown();
-    ImGui::DestroyContext();
-#endif
+
     GL::ImGuiLayer::OnDestroy();
     glfwDestroyWindow(window);
     glfwTerminate();
