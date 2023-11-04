@@ -68,12 +68,12 @@ namespace GL
             camera.Update();
         }
         
-        if( ImGui::InputFloat("Yaw", camera.Yaw(), 0.0f,0.0f,"Hello") )
+        if( ImGui::DragFloat("Yaw", camera.Yaw(), 1.0f,-180.0f, 180.0f) )
         {
             camera.Update();
         }
 
-        if( ImGui::InputFloat("Pitch", camera.Pitch() , 0.0f,0.0f,"Hello"))
+        if( ImGui::DragFloat("Pitch", camera.Pitch() , 1.0f,-89.0f,89.0f))
         {
             camera.Update();
         }

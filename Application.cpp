@@ -331,7 +331,8 @@ int main()
         LightShader.Bind();
         LightShader.Set3f("u_LightObjColor",  LightAttr.m_Color);
         texture1.Bind();
-        LightCube.Draw(g_Camera, LightAttr.m_Pos, LightAttr.m_Rotation, LightAttr.m_Scale);
+        glm::vec3 mv{0.0f, 10 * (float)sin(glfwGetTime()), 0.0f};
+        LightCube.Draw(g_Camera, LightAttr.m_Pos + mv, LightAttr.m_Rotation, LightAttr.m_Scale);
 
         GL::ImGuiLayer::End(g_Data.m_WIDTH,g_Data.m_HEIGHT);
 
