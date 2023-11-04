@@ -272,8 +272,8 @@ int main()
     std::filesystem::path sPath = path / "shaders" / "Obj.shader";
     std::filesystem::path lPath = path / "shaders" / "Light.shader";
 
-    std::filesystem::path iPath = path / "texture" / "wall.jpg";
-    std::filesystem::path iiPath = path / "texture" / "container.jpg";
+    std::filesystem::path iPath = path / "texture" / "box.png";
+    std::filesystem::path iiPath = path / "texture" / "happyface.png";
 
     GL::Shader shader(sPath.string().c_str());
     GL::Shader LightShader(lPath.string().c_str());
@@ -281,10 +281,10 @@ int main()
     GL::Cube cube(shader);
     GL::Cube LightCube(LightShader);
 
-    GL::Texture texture1(iPath.string().c_str());
-    GL::Texture texture2(iiPath.string().c_str());
-    
-    shader.SetInt("u_Texture", 0);
+    GL::Texture texture;
+    texture.LoadTexture(iPath.string().c_str());
+    texture.LoadTexture(iiPath.string().c_str());
+
 
     while (!glfwWindowShouldClose(window)) 
     {
@@ -312,9 +312,7 @@ int main()
         shader.Set3f( "u_ViewPos",      g_Camera.GetCameraPos());
         //shader.Set3f( "u_LightColor",   LightAttr.m_Color);
 
-        shader.Set3f("material.ambient",  {1.0f, 0.5f, 0.31f});
-        shader.Set3f("material.diffuse",  {1.0f, 0.5f, 0.31f});
-        shader.Set3f("material.specular", {0.5f, 0.5f, 0.5f});
+        //shader.Set3f("material.specular", {0.5f, 0.5f, 0.5f});
         shader.SetFloat("material.shininess", 32.0f);
 
         glm::vec3 diffuseColor = LightAttr.m_Color * glm::vec3(0.5f); // 降低影响
@@ -323,16 +321,21 @@ int main()
         shader.Set3f("u_LightColor.ambient",  ambientColor);
         shader.Set3f("u_LightColor.diffuse",  diffuseColor); // 将光照调暗了一些以搭配场景
         shader.Set3f("u_LightColor.specular", {1.0f, 1.0f, 1.0f}); 
-        texture1.Bind();
+        shader.SetInt("material.diffuse", 0);
+        shader.SetInt("material.specular", 1);
+        texture.Bind(0);
+        texture.Bind(1);
         cube.Draw(g_Camera, cubeAttr.m_Pos, cubeAttr.m_Rotation, cubeAttr.m_Scale);
 
         cube.Draw(g_Camera, AnotherCubeAttr.m_Pos, AnotherCubeAttr.m_Rotation, AnotherCubeAttr.m_Scale);
 
         LightShader.Bind();
         LightShader.Set3f("u_LightObjColor",  LightAttr.m_Color);
-        texture1.Bind();
-        glm::vec3 mv{0.0f, 10 * (float)sin(glfwGetTime()), 0.0f};
-        LightCube.Draw(g_Camera, LightAttr.m_Pos + mv, LightAttr.m_Rotation, LightAttr.m_Scale);
+        texture.Bind(0);
+        texture.Bind(1);
+
+        LightAttr.m_Pos.y += (float)sin(glfwGetTime());
+        LightCube.Draw(g_Camera, LightAttr.m_Pos, LightAttr.m_Rotation, LightAttr.m_Scale);
 
         GL::ImGuiLayer::End(g_Data.m_WIDTH,g_Data.m_HEIGHT);
 

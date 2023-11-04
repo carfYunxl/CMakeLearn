@@ -1,25 +1,29 @@
 #ifndef TEXTURE_H_
 #define TEXTURE_H_
 
+#include <vector>
+
 namespace GL
 {
     class Texture
     {
     public:
-        Texture(const char* filepath);
+        Texture();
         ~Texture();
 
-        void Bind() const ;
+        void Bind(uint32_t slot) const ;
         void UnBind() const { glBindTexture(GL_TEXTURE_2D, 0); }
 
-        unsigned int const GetTexture() const {return texture;}
+        unsigned int const GetTexture(uint32_t index) const {return m_Textures[index];}
+
+        void LoadTexture(const char* filepath);
 
     private:
-        unsigned int texture;
-        const char* m_filepath;
-
-        unsigned int m_InternalFormat, m_DataFormat;
-        int m_Width, m_Height;
+        std::vector<unsigned int> m_Textures;   //最多32
+        unsigned int m_InternalFormat;
+        unsigned int m_DataFormat;
+        int m_Width;
+        int m_Height;
     };
 }
 
