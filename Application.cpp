@@ -323,22 +323,24 @@ int main()
         shader.Set3f("u_LightColor.ambient",  ambientColor);
         shader.Set3f("u_LightColor.diffuse",  diffuseColor); // 将光照调暗了一些以搭配场景
         shader.Set3f("u_LightColor.specular", {1.0f, 1.0f, 1.0f}); 
+        shader.Set3f("u_LightColor.dir", {-1.0f, 0.0f, 0.0f}); 
+
         shader.SetInt("material.diffuse", 0);
         shader.SetInt("material.specular", 1);
         shader.SetInt("material.emission", 2);
 
         texture.BindAll();
 
-        cube.Draw(g_Camera, cubeAttr.m_Pos, cubeAttr.m_Rotation, cubeAttr.m_Scale);
+        cube.Draw(g_Camera, cubeAttr.m_Pos, cubeAttr.m_Rotation, cubeAttr.m_Scale, g_Camera.m_Data.m_DrawMode);
 
-        cube.Draw(g_Camera, AnotherCubeAttr.m_Pos, AnotherCubeAttr.m_Rotation, AnotherCubeAttr.m_Scale);
+        cube.Draw(g_Camera, AnotherCubeAttr.m_Pos, AnotherCubeAttr.m_Rotation, AnotherCubeAttr.m_Scale, g_Camera.m_Data.m_DrawMode);
 
         LightShader.Bind();
         LightShader.Set3f("u_LightObjColor",  LightAttr.m_Color);
          texture.BindAll();
 
         LightAttr.m_Pos.y += (float)sin(glfwGetTime());
-        LightCube.Draw(g_Camera, LightAttr.m_Pos, LightAttr.m_Rotation, LightAttr.m_Scale);
+        LightCube.Draw(g_Camera, LightAttr.m_Pos, LightAttr.m_Rotation, LightAttr.m_Scale, g_Camera.m_Data.m_DrawMode);
 
         GL::ImGuiLayer::End(g_Data.m_WIDTH,g_Data.m_HEIGHT);
 

@@ -11,6 +11,7 @@ namespace GL{
         bool        m_isFirstMouse {true};
         float       m_MoveSpeed{190.0f};
         float       m_Sensitivity{0.1f};
+        uint32_t    m_DrawMode{0x1B02};
     };
 
     class Camera

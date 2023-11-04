@@ -78,6 +78,8 @@ namespace GL
             camera.Update();
         }
 
+        ImGui::Text("View Direction");
+
         if( ImGui::Button("Z", ImVec2(50,35)) )
         {
             camera.SetCameraPos({0.0f, 0.0, 200.0f});
@@ -85,20 +87,37 @@ namespace GL
             camera.SetYaw(-90.0f);
         }
 
+        ImGui::SameLine();
+
         if( ImGui::Button("X", ImVec2(50,35)) )
         {
             camera.SetCameraPos({200.0f, 0.0, 00.0f});
             camera.SetPitch(0.0f);
             camera.SetYaw(-180.0f);
         }
-
+        ImGui::SameLine();
         if( ImGui::Button("Y", ImVec2(50,35)) )
         {
             camera.SetCameraPos({0.0f, 200.0, 00.0f});
             camera.SetPitch(-89.0f);
             camera.SetYaw(-90.0f);
         }
+        ImGui::SameLine();
+        if( ImGui::Button("Normal", ImVec2(50,35)) )
+        {
+            camera.SetCameraPos({100.0f, 100.0, 100.0f});
+            camera.SetPitch(-45.0f);
+            camera.SetYaw(-135.0f);
+        }
 
+        static bool lineMode{false};
+        if(ImGui::Checkbox("SHOW MODE", &lineMode))
+        {
+            if(lineMode)
+                camera.m_Data.m_DrawMode = GL_LINE;
+            else
+                camera.m_Data.m_DrawMode = GL_FILL;
+        }
         ImGui::End();
     }
 }

@@ -92,7 +92,7 @@ namespace GL
         m_vertexArray.UnBind();
     }
 
-    void Cube::Draw(const Camera& camera, const glm::vec3& pos, const glm::vec3& rotation, const glm::vec3& scale)
+    void Cube::Draw(const Camera& camera, const glm::vec3& pos, const glm::vec3& rotation, const glm::vec3& scale, uint32_t& draw_mode)
     {
         m_Shader.SetMat4(
             "u_Model", 
@@ -125,7 +125,7 @@ namespace GL
         m_Shader.SetMat4("u_Projection", camera.GetProjection());
 
         m_vertexArray.Bind();
-        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        glPolygonMode(GL_FRONT_AND_BACK, draw_mode);
         glDrawArrays(GL_TRIANGLES, 0, 36);
     }
 }
