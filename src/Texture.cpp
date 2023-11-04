@@ -62,4 +62,19 @@ namespace GL
         glActiveTexture(GL_TEXTURE0 + slot);
         glBindTexture(GL_TEXTURE_2D, m_Textures[slot]);
     }
+
+    void Texture::BindAll() const
+    {
+        for(size_t i = 0;i < m_Textures.size();++i)
+        {
+            Bind(i);
+        }
+    }
+    void Texture::UnBindAll() const
+    {
+        for(size_t i = 0;i < m_Textures.size();++i)
+        {
+            UnBind(i);
+        }
+    }
 }

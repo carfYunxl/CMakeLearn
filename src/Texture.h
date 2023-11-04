@@ -12,11 +12,14 @@ namespace GL
         ~Texture();
 
         void Bind(uint32_t slot) const ;
-        void UnBind() const { glBindTexture(GL_TEXTURE_2D, 0); }
+        void UnBind(uint32_t slot) const { glBindTexture(GL_TEXTURE_2D + slot, 0); }
 
         unsigned int const GetTexture(uint32_t index) const {return m_Textures[index];}
 
         void LoadTexture(const char* filepath);
+
+        void BindAll() const;
+        void UnBindAll() const;
 
     private:
         std::vector<unsigned int> m_Textures;   //最多32

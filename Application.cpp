@@ -272,19 +272,21 @@ int main()
     std::filesystem::path sPath = path / "shaders" / "Obj.shader";
     std::filesystem::path lPath = path / "shaders" / "Light.shader";
 
-    std::filesystem::path iPath = path / "texture" / "box.png";
-    std::filesystem::path iiPath = path / "texture" / "happyface.png";
+    GL::Texture texture;
+    std::filesystem::path Path = path / "texture" / "box.png";
+    texture.LoadTexture(Path.string().c_str());
+
+    Path = path / "texture" / "box_mirr.png";
+    texture.LoadTexture(Path.string().c_str());
+
+    Path = path / "texture" / "matrix.jpg";
+    texture.LoadTexture(Path.string().c_str());
 
     GL::Shader shader(sPath.string().c_str());
     GL::Shader LightShader(lPath.string().c_str());
 
     GL::Cube cube(shader);
     GL::Cube LightCube(LightShader);
-
-    GL::Texture texture;
-    texture.LoadTexture(iPath.string().c_str());
-    texture.LoadTexture(iiPath.string().c_str());
-
 
     while (!glfwWindowShouldClose(window)) 
     {
@@ -323,16 +325,17 @@ int main()
         shader.Set3f("u_LightColor.specular", {1.0f, 1.0f, 1.0f}); 
         shader.SetInt("material.diffuse", 0);
         shader.SetInt("material.specular", 1);
-        texture.Bind(0);
-        texture.Bind(1);
+        shader.SetInt("material.emission", 2);
+
+        texture.BindAll();
+
         cube.Draw(g_Camera, cubeAttr.m_Pos, cubeAttr.m_Rotation, cubeAttr.m_Scale);
 
         cube.Draw(g_Camera, AnotherCubeAttr.m_Pos, AnotherCubeAttr.m_Rotation, AnotherCubeAttr.m_Scale);
 
         LightShader.Bind();
         LightShader.Set3f("u_LightObjColor",  LightAttr.m_Color);
-        texture.Bind(0);
-        texture.Bind(1);
+         texture.BindAll();
 
         LightAttr.m_Pos.y += (float)sin(glfwGetTime());
         LightCube.Draw(g_Camera, LightAttr.m_Pos, LightAttr.m_Rotation, LightAttr.m_Scale);

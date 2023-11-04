@@ -77,6 +77,28 @@ namespace GL
         {
             camera.Update();
         }
+
+        if( ImGui::Button("Z", ImVec2(50,35)) )
+        {
+            camera.SetCameraPos({0.0f, 0.0, 200.0f});
+            camera.SetPitch(0.0f);
+            camera.SetYaw(-90.0f);
+        }
+
+        if( ImGui::Button("X", ImVec2(50,35)) )
+        {
+            camera.SetCameraPos({200.0f, 0.0, 00.0f});
+            camera.SetPitch(0.0f);
+            camera.SetYaw(-180.0f);
+        }
+
+        if( ImGui::Button("Y", ImVec2(50,35)) )
+        {
+            camera.SetCameraPos({0.0f, 200.0, 00.0f});
+            camera.SetPitch(-89.0f);
+            camera.SetYaw(-90.0f);
+        }
+
         ImGui::End();
     }
 }
