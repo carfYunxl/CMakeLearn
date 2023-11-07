@@ -1,24 +1,30 @@
-#ifndef IMGUI_LAYER_H_
-#define IMGUI_LAYER_H_
+#pragma once
+#include "Layer.h"
+#include "ApplicationEvent.h"
+#include "KeyEvent.h"
+#include "MouseEvent.h"
 
-#include "Data.h"
-#include "Camera.h"
-
-struct GLFWwindow;
 namespace GL
 {
-    class ImGuiLayer
+    class ImGuiLayer : public Layer
     {
     public:
-        static void OnInit(GLFWwindow* window);
-        static void OnDestroy();
-        static void Begin();
-        static void End(int width, int height);
-        static void OnUpdate(Attribute& data, const char* title);
-        static void OnUpdate(Camera& camera);
+
+        ImGuiLayer();
+        ~ImGuiLayer();
+
+        virtual void OnAttach() override;
+        virtual void OnDetach() override;
+        void OnEvent(Event& e);
+
+        virtual void OnImGuiRender() override;
+
+        void Begin();
+        void End();
+
+        void BlockEvents(bool block) { m_BlockEvents = block; }
+    private:
+        float m_Time = 0.0f;
+        bool m_BlockEvents = true;
     };
 }
-
-
-
-#endif

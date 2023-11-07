@@ -7,7 +7,15 @@
 
 namespace GL
 {
-    Shader::Shader(const char* shader_source)
+    Shader::Shader()
+    { }
+
+    Shader::~Shader()
+    {
+        glDeleteProgram(m_sProgram);
+    }
+
+    void Shader::LoadShader(const char* shader_source)
     {
         try
         {
@@ -22,11 +30,6 @@ namespace GL
         {
             std::cerr << e.what() << '\n';
         }
-    }
-
-    Shader::~Shader()
-    {
-        glDeleteProgram(m_sProgram);
     }
 
     void Shader::Bind()

@@ -2,6 +2,7 @@
 #define TEXTURE_H_
 
 #include <vector>
+#include "glad/glad.h"
 
 namespace GL
 {

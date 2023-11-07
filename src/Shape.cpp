@@ -1,9 +1,8 @@
+#include "pch.h"
 #include "Shape.h"
-#include "glad/glad.h"
 #include "VertextBuffer.h"
 #include "IndexBuffer.h"
 #include "glm/gtc/matrix_transform.hpp"
-#include "glfw3.h"
 
 namespace GL
 {

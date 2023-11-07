@@ -2,24 +2,27 @@
 #define CAMERA_H_
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
+#include "Event.h"
+#include "MouseEvent.h"
+#include "ApplicationEvent.h"
+#include "TimeStep.h"
 
 namespace GL{
-
-    struct CameraData
-    {
-        glm::vec3   m_GlobalUp{0.0f, 1.0f, 0.0f}; //全局坐标系上向量
-        bool        m_isFirstMouse {true};
-        float       m_MoveSpeed{190.0f};
-        float       m_Sensitivity{0.1f};
-        uint32_t    m_DrawMode{0x1B02};
-    };
 
     class Camera
     {
     public:
         explicit Camera(float Aspectio);
         ~Camera();
+        void OnUpdate(Timestep ts);
+        void OnEvent(Event& e);
 
+        void OnResize(float width, float height);
+    private:
+        bool OnMouseScrolled(MouseScrolledEvent& e);
+        bool OnMouseMoved(MouseMovedEvent& e);
+        bool OnWindowResized(WindowResizeEvent& e);
+    public:
         const glm::mat4& GetView() const {return m_View;}
 
         const float GetYaw() const { return m_Yaw; }
@@ -32,8 +35,6 @@ namespace GL{
 
         const glm::vec3& GetCameraPos() const { return m_cPos; }
         void SetCameraPos(const glm::vec3& pos) { m_cPos = pos; Update(); }
-        void AddCameraPos(const glm::vec3& add) { m_cPos += add; Update(); }
-        void SubCameraPos(const glm::vec3& add) { m_cPos -= add; Update(); }
 
         const glm::mat4 GetProjection() const {return m_Projection;}
 
@@ -42,7 +43,6 @@ namespace GL{
         void SetZoom(float zoom) { m_Zoom = zoom; Update(); }
 
         void SetAspectio(float asp) { m_Aspectio = asp; Update(); }
-
 
         const glm::vec3& GetFront() {return m_cFront;}
         const glm::vec3& GetRight() {return m_cRight;}
@@ -74,8 +74,15 @@ namespace GL{
 
         float       m_Zoom{45.0f};
         float       m_Aspectio{1.778f};
-    public:
-        CameraData  m_Data;
+
+        glm::vec3   m_GlobalUp{0.0f, 1.0f, 0.0f}; //全局坐标系上向量
+        bool        m_isFirstMouse {true};
+        float       m_MoveSpeed{190.0f};
+        float       m_Sensitivity{0.1f};
+
+        float       m_ts;
+        float       m_LastX;
+        float       m_LastY;
     };
 
 }

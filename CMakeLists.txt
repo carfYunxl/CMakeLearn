@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.15)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_C_STANDARD 17)
 
-project(app)
+project(GEditor)
 
 aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/src SRC)
 aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/GLAD/src SRC_GLAD)
@@ -28,4 +28,4 @@ link_directories(${CMAKE_CURRENT_SOURCE_DIR}/GLFW/lib)
 
 link_libraries(glfw3.lib opengl32.lib)
 
-add_executable(app ${SRC} ${SRC_STB} ${IMGUI_SRC1}  ${IMGUI_SRC2} ${SRC_GLAD} Application.cpp)
+add_executable(GEditor ${SRC} ${SRC_STB} ${IMGUI_SRC1}  ${IMGUI_SRC2} ${SRC_GLAD} GL_EditorLayer.h GL_EditorLayer.cpp GL_App.cpp )

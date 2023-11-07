@@ -8,8 +8,6 @@
 
 namespace GL
 {
-    // class Texture;
-
     class Shader
     {
         public:
@@ -20,8 +18,11 @@ namespace GL
                 FRAGMENT
             };
 
-            Shader(const char* shader_source);
+            Shader();
             ~Shader();
+
+            void LoadShader(const char* shader_source);
+
             void Bind();
             void UnBind();
 
@@ -32,8 +33,6 @@ namespace GL
             void SetInt(const char* name, unsigned int index);
             void SetFloat(const char* name, float val);
             void SetMat4(const char* name, const glm::mat4& trans);
-
-            //void SetUniformAttr(const Attribute& data);
 
         private:
             unsigned int    Compile(const char* shader, unsigned int type);
