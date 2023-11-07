@@ -17,8 +17,8 @@ namespace GL
 
     void GL_EditorLayer::OnUpdate(Timestep ts)
     {
-        m_Frams = ts;
         m_FrameBuffer->Bind();
+        m_Frams = ts;
         //std::cout << "FPS = " << 1000 / GL::g_SceneData.m_TS.GetMilliseconds() << std::endl;
 
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
@@ -83,8 +83,8 @@ namespace GL
         m_LightCube = new Cube(m_LightShader);
 
         FramebufferSpecification fbSpec;
-        fbSpec.Width = 1280;
-        fbSpec.Height = 720;
+        fbSpec.Width = 1920;
+        fbSpec.Height = 1080;
         m_FrameBuffer = std::make_unique<OpenGLFramebuffer>(fbSpec);
     }
 
@@ -234,6 +234,8 @@ namespace GL
         {
             m_FrameBuffer->Resize((uint32_t)m_ViewPortSize.x, (uint32_t)m_ViewPortSize.y);
             m_ViewPortSize = {viewPortSize.x, viewPortSize.y};
+
+            m_Camera.Update();
         }
         uint32_t textureID = m_FrameBuffer->GetColorAttachmentRendererID();
         ImGui::Image((void*)textureID, ImVec2{ m_ViewPortSize.x, m_ViewPortSize.y }, ImVec2{0,1}, ImVec2{1,0});

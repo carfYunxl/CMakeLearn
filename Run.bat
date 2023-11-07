@@ -1,3 +1,3 @@
 cd bin\Debug
-app.exe
+GEditor.exe
 pause
