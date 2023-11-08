@@ -30,7 +30,7 @@ namespace GL
 
         m_View = glm::lookAt( m_cPos, m_cPos + m_cFront ,m_cUp );
 
-        m_Projection = glm::perspective(m_Zoom, m_Aspectio, 0.1f, 1000.0f);
+        m_Projection = glm::perspective(m_Zoom, m_Aspectio, 0.1f, m_ViewDistance);
     }
 
     void Camera::OnUpdate(Timestep ts)
@@ -141,7 +141,7 @@ namespace GL
     {
         OnResize((float)e.GetWidth(), (float)e.GetHeight());
 
-        m_Projection = glm::perspective(glm::radians(m_Zoom), m_Aspectio, 0.1f, 100.0f);
+        m_Projection = glm::perspective(glm::radians(m_Zoom), m_Aspectio, 0.1f, m_ViewDistance);
 
         return false;
     }

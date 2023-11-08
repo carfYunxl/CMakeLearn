@@ -21,34 +21,44 @@ namespace GL
         m_Frams = ts;
         //std::cout << "FPS = " << 1000 / GL::g_SceneData.m_TS.GetMilliseconds() << std::endl;
 
-        glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         if (m_ViewportFocused)
             m_Camera.OnUpdate(ts);
 
         m_ObjShader.Bind();
-        m_ObjShader.Set3f( "u_LightPos",     m_LightAttr.m_Pos);
-        m_ObjShader.Set3f( "u_ViewPos",      m_Camera.GetCameraPos());
-        m_ObjShader.SetFloat("material.shininess", 32.0f);
+        // m_ObjShader.Set3f( "u_LightPos",     m_LightAttr.m_Pos);
+        // m_ObjShader.Set3f( "u_ViewPos",      m_Camera.GetCameraPos());
+        // m_ObjShader.SetFloat("material.shininess", 32.0f);
 
-        glm::vec3 diffuseColor = m_LightAttr.m_Color * glm::vec3(0.5f); // 降低影响
-        glm::vec3 ambientColor = diffuseColor * glm::vec3(0.2f); // 很低的影响
+        // glm::vec3 diffuseColor = m_LightAttr.m_Color * glm::vec3(0.5f); // 降低影响
+        // glm::vec3 ambientColor = diffuseColor * glm::vec3(0.2f); // 很低的影响
 
-        m_ObjShader.Set3f("u_LightColor.ambient",  ambientColor);
-        m_ObjShader.Set3f("u_LightColor.diffuse",  diffuseColor); // 将光照调暗了一些以搭配场景
-        m_ObjShader.Set3f("u_LightColor.specular", {1.0f, 1.0f, 1.0f}); 
-        m_ObjShader.Set3f("u_LightColor.dir", {-1.0f, 0.0f, 0.0f}); 
+        // m_ObjShader.Set3f("u_LightColor.ambient",  ambientColor);
+        // m_ObjShader.Set3f("u_LightColor.diffuse",  diffuseColor); // 将光照调暗了一些以搭配场景
+        // m_ObjShader.Set3f("u_LightColor.specular", {1.0f, 1.0f, 1.0f}); 
+        // m_ObjShader.Set3f("u_LightColor.dir", {-1.0f, 0.0f, 0.0f}); 
 
-        m_ObjShader.SetInt("material.diffuse", 0);
-        m_ObjShader.SetInt("material.specular", 1);
-        m_ObjShader.SetInt("material.emission", 2);
+        //m_ObjShader.SetInt("material.diffuse", 0);
+        m_ObjShader.SetInt("u_Texture", 0);
+        m_ObjShader.SetFloat("u_Repeat", m_Repeat );
+        // m_ObjShader.SetInt("material.specular", 1);
+        // m_ObjShader.SetInt("material.emission", 2);
 
         m_Texture.BindAll();
 
         m_ObjCube->Draw(m_Camera, m_CubeAttr.m_Pos, m_CubeAttr.m_Rotation, m_CubeAttr.m_Scale, m_DrawMode);
 
-        m_ObjCube->Draw(m_Camera, m_AnotherCubeAttr.m_Pos, m_AnotherCubeAttr.m_Rotation, m_AnotherCubeAttr.m_Scale, m_DrawMode);
+        //m_ObjCube->Draw(m_Camera, m_AnotherCubeAttr.m_Pos, m_AnotherCubeAttr.m_Rotation, m_AnotherCubeAttr.m_Scale, m_DrawMode);
+
+        // for(int i = 0;i < m_CubeCnt;++i)
+        // {
+        //     for(int j = 0;j < m_CubeCnt;++j)
+        //     {
+        //         m_ObjCube->Draw(m_Camera, {0.0f + i * 5.0f, 10.0f, 0.0f + j * 5.0f}, {0.0f, 0.0f, 0.0f}, {3.0f, 3.0f, 3.0f}, m_DrawMode);
+        //     }
+        // }
 
         m_LightShader.Bind();
         m_LightShader.Set3f("u_LightObjColor",  m_LightAttr.m_Color);
@@ -64,19 +74,20 @@ namespace GL
     {
         std::filesystem::path path = std::filesystem::current_path();
 
-        std::filesystem::path Path = path / "texture" / "box.png";
+        std::filesystem::path Path = path / "texture" / "wall.jpg";
         m_Texture.LoadTexture(Path.string().c_str());
 
-        Path = path / "texture" / "box_mirr.png";
-        m_Texture.LoadTexture(Path.string().c_str());
+        // Path = path / "texture" / "box_mirr.png";
+        // m_Texture.LoadTexture(Path.string().c_str());
 
-        Path = path / "texture" / "matrix.jpg";
-        m_Texture.LoadTexture(Path.string().c_str());
+        // Path = path / "texture" / "happyface.png";
+        // m_Texture.LoadTexture(Path.string().c_str());
 
+        std::filesystem::path bPath = path / "shaders" / "Basic.shader";
         std::filesystem::path sPath = path / "shaders" / "Obj.shader";
         std::filesystem::path lPath = path / "shaders" / "Light.shader";
 
-        m_ObjShader.LoadShader(sPath.string().c_str());
+        m_ObjShader.LoadShader(bPath.string().c_str());
         m_LightShader.LoadShader(lPath.string().c_str());
 
         m_ObjCube = new Cube(m_ObjShader);
@@ -198,11 +209,18 @@ namespace GL
             else
                 m_DrawMode = GL_FILL;
         }
+
+        ImGui::Text("Frame time %.2f ms, FPS : %d", m_Frams, (size_t)((float)1000 / m_Frams));
+        ImGui::DragFloat("cube number",&m_CubeCnt, 1.0f, 1.0f, 150.0f);
+        ImGui::DragFloat("view distance",m_Camera.vDistance(), 1.0f, 1000.0f, 10000.0f);
+        ImGui::DragFloat("repeat", &m_Repeat, 1.0f, 10.0f, 100.0f);
         ImGui::End();
 
         ImGui::Begin("Obj");
         ImGui::DragFloat3("Position", glm::value_ptr(m_CubeAttr.m_Pos));
         ImGui::DragFloat3("Rotation", glm::value_ptr(m_CubeAttr.m_Rotation));
+
+        
         ImGui::DragFloat3("Scale", glm::value_ptr(m_CubeAttr.m_Scale));
         ImGui::ColorPicker3("Color", glm::value_ptr(m_CubeAttr.m_Color));
         ImGui::End();

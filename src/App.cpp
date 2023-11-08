@@ -3,6 +3,8 @@
 
 #include "glfw3.h"
 
+
+
 namespace GL
 {
     #define BIND_EVENT_FN(x) std::bind(&x, this, std::placeholders::_1)

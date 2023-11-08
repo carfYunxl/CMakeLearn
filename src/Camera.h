@@ -60,6 +60,8 @@ namespace GL{
         float* Yaw(){return &m_Yaw;}
         float* Pitch(){return &m_Pitch;}
 
+        float* vDistance(){return &m_ViewDistance;}
+
     private:
         glm::vec3   m_cPos;     //camera pos
         glm::vec3   m_cFront;   //camera front
@@ -83,6 +85,8 @@ namespace GL{
         float       m_ts;
         float       m_LastX;
         float       m_LastY;
+
+        float       m_ViewDistance{10000.0f};
     };
 
 }

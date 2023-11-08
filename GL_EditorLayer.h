@@ -37,7 +37,7 @@ namespace GL
         Attribute   m_CubeAttr{
             {0.0f, 0.0f, 0.0f},
             {0.0f, 0.0f, 0.0f},
-            {100.0f, 5.0f, 100.0f},
+            {10000.0f, 5.0f, 10000.0f},
             {1.0f, 0.5f, 0.31f}
         };
         Attribute   m_AnotherCubeAttr{
@@ -62,6 +62,11 @@ namespace GL
         glm::vec2 m_ViewPortSize;
 
         std::unique_ptr<OpenGLFramebuffer> m_FrameBuffer;
+
+        float m_CubeCnt{5};
+
+        float m_Repeat{20.0f};
+
     };
 }
 
