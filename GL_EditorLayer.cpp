@@ -19,79 +19,25 @@ namespace GL
     {
         m_FrameBuffer->Bind();
         m_Frams = ts;
-        //std::cout << "FPS = " << 1000 / GL::g_SceneData.m_TS.GetMilliseconds() << std::endl;
 
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+        m_BatchRenderer.ResetDrawCall();
+
         if (m_ViewportFocused)
             m_Camera.OnUpdate(ts);
 
-        m_ObjShader.Bind();
-        // m_ObjShader.Set3f( "u_LightPos",     m_LightAttr.m_Pos);
-        // m_ObjShader.Set3f( "u_ViewPos",      m_Camera.GetCameraPos());
-        // m_ObjShader.SetFloat("material.shininess", 32.0f);
-
-        // glm::vec3 diffuseColor = m_LightAttr.m_Color * glm::vec3(0.5f); // 降低影响
-        // glm::vec3 ambientColor = diffuseColor * glm::vec3(0.2f); // 很低的影响
-
-        // m_ObjShader.Set3f("u_LightColor.ambient",  ambientColor);
-        // m_ObjShader.Set3f("u_LightColor.diffuse",  diffuseColor); // 将光照调暗了一些以搭配场景
-        // m_ObjShader.Set3f("u_LightColor.specular", {1.0f, 1.0f, 1.0f}); 
-        // m_ObjShader.Set3f("u_LightColor.dir", {-1.0f, 0.0f, 0.0f}); 
-
-        //m_ObjShader.SetInt("material.diffuse", 0);
-        m_ObjShader.SetInt("u_Texture", 0);
-        m_ObjShader.SetFloat("u_Repeat", m_Repeat );
-        // m_ObjShader.SetInt("material.specular", 1);
-        // m_ObjShader.SetInt("material.emission", 2);
-
-        m_Texture.BindAll();
-
-        m_ObjCube->Draw(m_Camera, m_CubeAttr.m_Pos, m_CubeAttr.m_Rotation, m_CubeAttr.m_Scale, m_DrawMode);
-
-        //m_ObjCube->Draw(m_Camera, m_AnotherCubeAttr.m_Pos, m_AnotherCubeAttr.m_Rotation, m_AnotherCubeAttr.m_Scale, m_DrawMode);
-
-        // for(int i = 0;i < m_CubeCnt;++i)
-        // {
-        //     for(int j = 0;j < m_CubeCnt;++j)
-        //     {
-        //         m_ObjCube->Draw(m_Camera, {0.0f + i * 5.0f, 10.0f, 0.0f + j * 5.0f}, {0.0f, 0.0f, 0.0f}, {3.0f, 3.0f, 3.0f}, m_DrawMode);
-        //     }
-        // }
-
-        m_LightShader.Bind();
-        m_LightShader.Set3f("u_LightObjColor",  m_LightAttr.m_Color);
-        m_Texture.BindAll();
-
-        m_LightAttr.m_Pos.y += (float)sin(glfwGetTime());
-        m_LightCube->Draw(m_Camera, m_LightAttr.m_Pos, m_LightAttr.m_Rotation, m_LightAttr.m_Scale, m_DrawMode);
+        m_BatchRenderer.BeginScene(m_Camera);
+        m_BatchRenderer.OnDrawCube( {0.0f, 0.0f, 0.0f}, m_CubeAttr.m_Rotation, m_CubeAttr.m_Scale );
+        m_BatchRenderer.EndScene();
 
         m_FrameBuffer->Unbind();
     }
 
     void GL_EditorLayer::OnAttach()
     {
-        std::filesystem::path path = std::filesystem::current_path();
-
-        std::filesystem::path Path = path / "texture" / "wall.jpg";
-        m_Texture.LoadTexture(Path.string().c_str());
-
-        // Path = path / "texture" / "box_mirr.png";
-        // m_Texture.LoadTexture(Path.string().c_str());
-
-        // Path = path / "texture" / "happyface.png";
-        // m_Texture.LoadTexture(Path.string().c_str());
-
-        std::filesystem::path bPath = path / "shaders" / "Basic.shader";
-        std::filesystem::path sPath = path / "shaders" / "Obj.shader";
-        std::filesystem::path lPath = path / "shaders" / "Light.shader";
-
-        m_ObjShader.LoadShader(bPath.string().c_str());
-        m_LightShader.LoadShader(lPath.string().c_str());
-
-        m_ObjCube = new Cube(m_ObjShader);
-        m_LightCube = new Cube(m_LightShader);
+        m_BatchRenderer.OnAttach();
 
         FramebufferSpecification fbSpec;
         fbSpec.Width = 1920;
@@ -144,7 +90,10 @@ namespace GL
         {
             if (ImGui::BeginMenu("File"))
             {
-                if (ImGui::MenuItem("Exit")) GL::App::Get().Close();
+                if (ImGui::MenuItem("Exit")) 
+                {
+                    GL::App::Get().Close();
+                }
                 ImGui::EndMenu();
             }
 
@@ -173,7 +122,7 @@ namespace GL
 
         if( ImGui::Button("Z", ImVec2(50,35)) )
         {
-            m_Camera.SetCameraPos({0.0f, 0.0, 200.0f});
+            m_Camera.SetCameraPos({0.0f, 0.0, 4.0f});
             m_Camera.SetPitch(0.0f);
             m_Camera.SetYaw(-90.0f);
         }
@@ -182,21 +131,21 @@ namespace GL
 
         if( ImGui::Button("X", ImVec2(50,35)) )
         {
-            m_Camera.SetCameraPos({200.0f, 0.0, 00.0f});
+            m_Camera.SetCameraPos({4.0f, 0.0, 00.0f});
             m_Camera.SetPitch(0.0f);
             m_Camera.SetYaw(-180.0f);
         }
         ImGui::SameLine();
         if( ImGui::Button("Y", ImVec2(50,35)) )
         {
-            m_Camera.SetCameraPos({0.0f, 200.0, 00.0f});
+            m_Camera.SetCameraPos({0.0f, 4.0, 00.0f});
             m_Camera.SetPitch(-89.0f);
             m_Camera.SetYaw(-90.0f);
         }
         ImGui::SameLine();
         if( ImGui::Button("Normal", ImVec2(50,35)) )
         {
-            m_Camera.SetCameraPos({100.0f, 100.0, 100.0f});
+            m_Camera.SetCameraPos({4.0f, 4.0, 4.0f});
             m_Camera.SetPitch(-45.0f);
             m_Camera.SetYaw(-135.0f);
         }
@@ -205,15 +154,19 @@ namespace GL
         if(ImGui::Checkbox("SHOW MODE", &lineMode))
         {
             if(lineMode)
-                m_DrawMode = GL_LINE;
+                m_BatchRenderer.SetDrawMode(PolygonMode::LINE);
             else
-                m_DrawMode = GL_FILL;
+                m_BatchRenderer.SetDrawMode(PolygonMode::FILL);
         }
 
-        ImGui::Text("Frame time %.2f ms, FPS : %d", m_Frams, (size_t)((float)1000 / m_Frams));
+        ImGui::Text("Frame time %.2f ms, FPS : %d", 1000 * m_Frams, (size_t)((float)1 / m_Frams));
         ImGui::DragFloat("cube number",&m_CubeCnt, 1.0f, 1.0f, 150.0f);
         ImGui::DragFloat("view distance",m_Camera.vDistance(), 1.0f, 1000.0f, 10000.0f);
-        ImGui::DragFloat("repeat", &m_Repeat, 1.0f, 10.0f, 100.0f);
+        ImGui::DragFloat("repeat", m_BatchRenderer.GetRepeat(), 1.0f, 1.0f, 100.0f);
+
+        ImGui::Text("Draw calls : %d", m_BatchRenderer.GetDrawCall());
+
+        ImGui::DragFloat("Max Vertices", m_BatchRenderer.GetMaxVertices(), 100.0f, 500.0f, 50000.0f);
         ImGui::End();
 
         ImGui::Begin("Obj");

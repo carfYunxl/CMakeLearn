@@ -77,6 +77,21 @@
         "cwctype": "cpp",
         "cinttypes": "cpp",
         "deque": "cpp",
-        "numeric": "cpp"
-    }
+        "numeric": "cpp",
+        "map": "cpp",
+        "set": "cpp",
+        "unordered_set": "cpp",
+        "xtree": "cpp"
+    },
+    "C_Cpp.errorSquiggles": "disabled",
+    "editor.scrollbar.horizontalScrollbarSize": 10,
+    "editor.scrollbar.verticalScrollbarSize": 10,
+    "editor.fontSize": 10,
+    "debug.console.fontSize": 10,
+    "scm.inputFontSize": 10,
+    "terminal.integrated.fontSize": 10,
+    "chat.editor.fontSize": 10,
+    "markdown.preview.fontSize": 10,
+    "window.zoomLevel": 2,
+    "screencastMode.fontSize": 50
 }

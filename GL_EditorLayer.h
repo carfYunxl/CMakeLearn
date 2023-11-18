@@ -3,13 +3,11 @@
 
 #include "Layer.h"
 #include "Camera.h"
-#include "Texture.h"
-#include "Shader.h"
-#include "Shape.h"
 #include "Data.h"
 #include "glm.hpp"
 
 #include "OpenGLFrameBuffer.h"
+#include "BatchRender_3D.hpp"
 
 namespace GL
 {
@@ -28,22 +26,19 @@ namespace GL
 
         virtual void OnEvent(Event& event) override;
     private:
-        Camera      m_Camera{1.778f};
-        Texture     m_Texture;
-        Shader      m_ObjShader;
-        Shader      m_LightShader;
-        Cube*        m_ObjCube;
-        Cube*        m_LightCube;
+        Camera          m_Camera{1.778f};
+        BatchRender_3D  m_BatchRenderer;
+
         Attribute   m_CubeAttr{
             {0.0f, 0.0f, 0.0f},
             {0.0f, 0.0f, 0.0f},
-            {10000.0f, 5.0f, 10000.0f},
+            {1.0f, 1.0f, 1.0f},
             {1.0f, 0.5f, 0.31f}
         };
         Attribute   m_AnotherCubeAttr{
             {-50.0f, 0.0f, 0.0f},
             {0.0f, 0.0f, 0.0f},
-            {5.0f, 100.0f, 100.0f},
+            {1.0f, 1.0f, 1.0f},
             {1.0f, 0.5f, 0.31f}
         };
         Attribute   m_LightAttr{
@@ -54,7 +49,6 @@ namespace GL
         };
 
         float           m_Frams;
-        uint32_t        m_DrawMode;
 
         bool m_ViewportFocused {false};
         bool m_ViewportHovered {false};
@@ -64,8 +58,6 @@ namespace GL
         std::unique_ptr<OpenGLFramebuffer> m_FrameBuffer;
 
         float m_CubeCnt{5};
-
-        float m_Repeat{20.0f};
 
     };
 }

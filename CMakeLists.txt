@@ -10,6 +10,7 @@ aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/GLAD/src SRC_GLAD)
 aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/stb SRC_STB)
 aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/imgui IMGUI_SRC1)
 aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/imgui/backends IMGUI_SRC2)
+aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/entt/include ENTT_SRC)
 
 set(LIB_PATH ${CMAKE_CURRENT_SOURCE_DIR}/lib)
 
@@ -23,9 +24,10 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/imgui)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/imgui/backends)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/GLAD/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/GLFW/include)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/entt/include)
 
 link_directories(${CMAKE_CURRENT_SOURCE_DIR}/GLFW/lib)
 
 link_libraries(glfw3.lib opengl32.lib)
 
-add_executable(GEditor ${SRC} ${SRC_STB} ${IMGUI_SRC1}  ${IMGUI_SRC2} ${SRC_GLAD} GL_EditorLayer.h GL_EditorLayer.cpp GL_App.cpp )
+add_executable(GEditor ${SRC} ${SRC_STB} ${IMGUI_SRC1}  ${IMGUI_SRC2} ${SRC_GLAD} ${ENTT_SRC} GL_EditorLayer.h GL_EditorLayer.cpp GL_App.cpp )

@@ -4,7 +4,7 @@
 
 layout(location = 0) in vec3 a_Pos;
 layout(location = 1) in vec2 a_TexCoord;
-layout(location = 1) in vec3 a_Normal;
+layout(location = 2) in vec3 a_Normal;
 
 out vec2 TexCoord;
 out vec3 Normal;
@@ -53,36 +53,30 @@ uniform vec3 u_ViewPos;
 uniform Material material;
 
 uniform Light u_LightColor;
+uniform sampler2D u_Texture;
 
 void main()
 {
     //环境光照
-    vec3 ambient = u_LightColor.ambient * texture(material.diffuse, TexCoord * 20).rgb;
+    vec3 ambient = u_LightColor.ambient * texture(material.diffuse, TexCoord).rgb;
 
     // 漫反射光照计算
     vec3 norm = normalize(Normal);
     vec3 lightDir = normalize(u_LightPos - FragPos);
     float diff = max(dot(norm, lightDir), 0.0);
-    vec3 diffuse = u_LightColor.diffuse * diff * texture( material.diffuse, TexCoord*20).rgb;
+    vec3 diffuse = u_LightColor.diffuse * diff * texture( material.diffuse, TexCoord).rgb;
 
     // specular
     vec3 viewDir = normalize(u_ViewPos - FragPos);
     vec3 reflectDir = reflect(-lightDir, norm);  
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
-    vec3 specular = u_LightColor.specular * spec * texture(material.specular,TexCoord*20 ).rgb; 
+    vec3 specular = u_LightColor.specular * spec * texture(material.specular,TexCoord ).rgb; 
 
     // emission
-    vec3 emission;
-    if(TexCoord.x < 0.1 || TexCoord.x > 0.9 || TexCoord.y < 0.1 || TexCoord.y > 0.9)
-    {
-        emission = texture(material.emission, TexCoord).rgb;
-    }
-    else
-    {
-        emission = vec3(0.0);
-    }
+    vec3 emission= texture(material.emission, TexCoord).rgb;
 
-    FragColor = vec4(ambient + diffuse + specular + emission, 1.0);
+    //FragColor = vec4(ambient + diffuse + specular + emission, 1.0);
+    FragColor = texture( u_Texture, TexCoord);
 }
 
 //material

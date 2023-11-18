@@ -6,7 +6,7 @@
 namespace GL
 {
     Camera::Camera(float Aspectio)
-        : m_Aspectio(Aspectio), m_cPos{150.0f, 0.0f, 0.0f}, m_Yaw{-180.0f}, m_Pitch{0.0f}, m_Zoom{45.0f}
+        : m_Aspectio(Aspectio), m_cPos{5.0f, 0.0f, 0.0f}, m_Yaw{-180.0f}, m_Pitch{0.0f}, m_Zoom{45.0f}
     {
         Update();
     }
@@ -106,7 +106,7 @@ namespace GL
 
     bool Camera::OnMouseMoved(MouseMovedEvent& e)
     {
-        return true;
+        return false;
         float xpos = static_cast<float>(e.GetX());
         float ypos = static_cast<float>(e.GetY());
         
@@ -124,13 +124,14 @@ namespace GL
         m_LastY = ypos;
 
         m_Yaw += xoffset * m_Sensitivity;
+
         m_Pitch += yoffset * m_Sensitivity;
 
         if (m_Pitch > 89.0f)
             m_Pitch = 89.0f;
 
-        if (m_Pitch < -89.0f)
-            m_Pitch = -89.0f;
+        if (m_Pitch < 0.0f)
+            m_Pitch = 0.0f;
 
         Update();
 

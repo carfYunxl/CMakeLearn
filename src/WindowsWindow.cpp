@@ -45,7 +45,7 @@ namespace GL {
 
 		// change window icon
 		int width = 0, height = 0, channels = 0;
-		unsigned char* pixels = stbi_load("assets/textures/engine.png", &width, &height, &channels, 4);
+		unsigned char* pixels = stbi_load("textures/engine.png", &width, &height, &channels, 4);
 		GLFWimage images[1];
 		images[0].width = width;
 		images[0].height = height;
@@ -57,6 +57,7 @@ namespace GL {
 
 		glfwSetWindowUserPointer(m_Window, &m_Data);
 		SetVSync(true);
+		//glfwSetInputMode(m_Window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 		//< set GLFW callbacks
 		glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* window, int width, int height)

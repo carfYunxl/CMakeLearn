@@ -79,7 +79,7 @@ namespace GL{
 
         glm::vec3   m_GlobalUp{0.0f, 1.0f, 0.0f}; //全局坐标系上向量
         bool        m_isFirstMouse {true};
-        float       m_MoveSpeed{190.0f};
+        float       m_MoveSpeed{10.0f};
         float       m_Sensitivity{0.1f};
 
         float       m_ts;
