@@ -8,6 +8,7 @@
 
 #include "OpenGLFrameBuffer.h"
 #include "BatchRender_3D.hpp"
+#include "Scene/Scene.h"
 
 namespace GL
 {
@@ -27,7 +28,7 @@ namespace GL
         virtual void OnEvent(Event& event) override;
     private:
         Camera          m_Camera{1.778f};
-        BatchRender_3D  m_BatchRenderer;
+        BatchRender_3D*  m_BatchRenderer;
 
         Attribute   m_CubeAttr{
             {0.0f, 0.0f, 0.0f},
@@ -58,6 +59,8 @@ namespace GL
         std::unique_ptr<OpenGLFramebuffer> m_FrameBuffer;
 
         float m_CubeCnt{5};
+
+        std::unique_ptr<Scene> m_ActiveScene;
 
     };
 }

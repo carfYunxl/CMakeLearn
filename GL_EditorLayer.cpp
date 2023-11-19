@@ -7,6 +7,8 @@
 #include "imgui.h"
 #include "backends/imgui_impl_glfw.h"
 #include "backends/imgui_impl_opengl3.h"
+#include "Scene/Entity.h"
+#include "Scene/Components.h"
 
 namespace GL
 {
@@ -23,26 +25,33 @@ namespace GL
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        m_BatchRenderer.ResetDrawCall();
+        m_BatchRenderer->ResetDrawCall();
 
         if (m_ViewportFocused)
             m_Camera.OnUpdate(ts);
 
-        m_BatchRenderer.BeginScene(m_Camera);
-        m_BatchRenderer.OnDrawCube( {0.0f, 0.0f, 0.0f}, m_CubeAttr.m_Rotation, m_CubeAttr.m_Scale );
-        m_BatchRenderer.EndScene();
+        // update scene
+        m_BatchRenderer->BeginScene(m_Camera);
+        m_ActiveScene->OnUpdate(*m_BatchRenderer, ts);
+        m_BatchRenderer->EndScene();
 
         m_FrameBuffer->Unbind();
     }
 
     void GL_EditorLayer::OnAttach()
     {
-        m_BatchRenderer.OnAttach();
 
         FramebufferSpecification fbSpec;
         fbSpec.Width = 1920;
         fbSpec.Height = 1080;
         m_FrameBuffer = std::make_unique<OpenGLFramebuffer>(fbSpec);
+
+        m_ActiveScene = std::make_unique<Scene>();
+        auto& cube = (Entity)m_ActiveScene->CreateEntity("Cube");
+        auto& color = cube.AddComponent<ColorComponent>();
+
+        m_BatchRenderer = new BatchRender_3D(color);
+        m_BatchRenderer->OnAttach();
     }
 
     void GL_EditorLayer::OnDetach()
@@ -154,19 +163,22 @@ namespace GL
         if(ImGui::Checkbox("SHOW MODE", &lineMode))
         {
             if(lineMode)
-                m_BatchRenderer.SetDrawMode(PolygonMode::LINE);
+                m_BatchRenderer->SetDrawMode(PolygonMode::LINE);
             else
-                m_BatchRenderer.SetDrawMode(PolygonMode::FILL);
+                m_BatchRenderer->SetDrawMode(PolygonMode::FILL);
         }
 
         ImGui::Text("Frame time %.2f ms, FPS : %d", 1000 * m_Frams, (size_t)((float)1 / m_Frams));
         ImGui::DragFloat("cube number",&m_CubeCnt, 1.0f, 1.0f, 150.0f);
         ImGui::DragFloat("view distance",m_Camera.vDistance(), 1.0f, 1000.0f, 10000.0f);
-        ImGui::DragFloat("repeat", m_BatchRenderer.GetRepeat(), 1.0f, 1.0f, 100.0f);
+        ImGui::DragFloat("repeat", m_BatchRenderer->GetRepeat(), 1.0f, 1.0f, 100.0f);
 
-        ImGui::Text("Draw calls : %d", m_BatchRenderer.GetDrawCall());
+        ImGui::ColorPicker4("Component Color", glm::value_ptr(m_BatchRenderer->GetColorCom().Color));
 
-        ImGui::DragFloat("Max Vertices", m_BatchRenderer.GetMaxVertices(), 100.0f, 500.0f, 50000.0f);
+        ImGui::Text("Draw calls : %d", m_BatchRenderer->GetDrawCall());
+
+        ImGui::DragFloat("Max Vertices", m_BatchRenderer->GetMaxVertices(), 100.0f, 500.0f, 50000.0f);
+
         ImGui::End();
 
         ImGui::Begin("Obj");

@@ -10,6 +10,7 @@
 #include "Shader.h"
 #include "Texture.h"
 #include "Camera.h"
+#include "Scene/Components.h"
 
 namespace GL
 {
@@ -23,7 +24,7 @@ namespace GL
     {
     public:
 
-        BatchRender_3D();
+        BatchRender_3D(ColorComponent& color);
         ~BatchRender_3D();
 
         void LoadShader(const char* shader_src);
@@ -44,6 +45,11 @@ namespace GL
 
         float* GetMaxVertices(){return &m_MaxVertices;}
         float* GetRepeat(){return &m_Repeat; }
+
+        void DrawCube(const glm::mat4& transform, const glm::vec4& color);
+
+         ColorComponent& GetColorCom() const {return m_ColorCom;}
+         void SetColorCom(ColorComponent& color) {m_ColorCom = color;}
 
     private:
 
@@ -67,11 +73,13 @@ namespace GL
 
         std::vector<BufferLayout> m_Vertices;
 
-        float m_Repeat{5.0};
+        float m_Repeat{5.0f};
 
         float m_DrawCalls{0.0f};
 
-        float m_MaxVertices{1000};
+        float m_MaxVertices{1000.0f};
+        
+        ColorComponent& m_ColorCom;
     };
 }
 

@@ -65,7 +65,6 @@ namespace GL
         : Pos(std::move(lay.Pos)), Tex(std::move(lay.Tex)), Norm(std::move(lay.Norm)){}
     };
 
-    // XOY平面， Z > 0
     static std::vector<BufferLayout> g_vecGet{
         
         { POS(  0.5f, 0.5f, 0.5f), TEX( 1.0f, 1.0f ), NORM(  0.0f,  0.0f, 1.0f ) },

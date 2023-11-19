@@ -5,7 +5,8 @@
 
 namespace GL
 {
-    BatchRender_3D::BatchRender_3D()
+    BatchRender_3D::BatchRender_3D(ColorComponent& color)
+        : m_ColorCom(color)
     {
         m_pVAO = std::make_unique<VertexArray>();
         m_pVBO = std::make_unique<VertexBuffer>(m_MaxVertices * 36 * 8 * sizeof(float));
@@ -46,7 +47,7 @@ namespace GL
     void BatchRender_3D::OnAttach()
     {
         std::filesystem::path current_path = std::filesystem::current_path();
-        std::filesystem::path Path = current_path / "texture" / "wall.jpg";
+        std::filesystem::path Path = current_path / "texture" / "happyface.png";
         m_Texture->LoadTexture(Path.string().c_str());
 
         std::filesystem::path bPath = current_path / "shaders" / "Basic.shader";
@@ -123,6 +124,7 @@ namespace GL
         m_Shader->Bind();
         m_Shader->SetInt("u_Texture", 0);
         m_Shader->SetFloat("u_Repeat", m_Repeat );
+        m_Shader->Set4f("u_Color", m_ColorCom.Color);
         // texture attribute
         m_Shader->SetMat4( "u_Model", glm::mat4(1.0f) );
         // view matrix
@@ -149,5 +151,30 @@ namespace GL
     void BatchRender_3D::SetDrawMode(PolygonMode mode)
     {
         m_PolygonMode = mode;
+    }
+
+    void BatchRender_3D::DrawCube(const glm::mat4& transform, const glm::vec4& color)
+    {
+        for( int i = 0;i <  g_vecGet.size();++i)
+        {
+            glm::vec4 re = transform * glm::vec4{ g_vecGet[i].Pos.x, g_vecGet[i].Pos.y, g_vecGet[i].Pos.z, 1.0f };
+            m_Vertices[m_UsedVertices].Pos = POS{re.x, re.y, re.z};
+
+            re = transform * glm::vec4{ g_vecGet[i].Tex.x, g_vecGet[i].Tex.y, 1.0f, 1.0f };
+            m_Vertices[m_UsedVertices].Tex = TEX{re.x, re.y};
+
+            re = transform * glm::vec4{ g_vecGet[i].Norm.x, g_vecGet[i].Norm.y, g_vecGet[i].Norm.z, 1.0f };
+            m_Vertices[m_UsedVertices].Norm = NORM{re.x, re.y, re.z};
+
+            m_UsedVertices++;
+
+        }
+
+        m_CubeCnt++;
+
+        if( m_UsedVertices >= m_MaxVertices * 36 )
+        {
+            EndScene();
+        }
     }
 }
