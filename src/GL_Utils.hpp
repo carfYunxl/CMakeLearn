@@ -48,14 +48,15 @@ namespace GL
     {
     public:
         POS Pos;
+        glm::vec3 Color;
         TEX Tex;
         NORM Norm;
 
         BufferLayout()
-        : Pos{0.0f,0.0,0.0f}, Tex{0.0f, 0.0,}, Norm{0.0f, 0.0f,1.0f}{}
+        : Pos{0.0f,0.0,0.0f}, Color(glm::vec3(1.0f, 1.0f, 1.0f)), Tex{0.0f, 0.0,}, Norm{0.0f, 0.0f,1.0f}{}
 
-        BufferLayout(const POS& pos, const TEX& tex, const NORM& normalize)
-            : Pos(pos), Tex(tex), Norm(normalize)
+        BufferLayout(const POS& pos, const glm::vec3& color, const TEX& tex, const NORM& normalize)
+            : Pos(pos), Color(color), Tex(tex), Norm(normalize)
         {}
 
         BufferLayout(const BufferLayout& lay)
@@ -67,42 +68,42 @@ namespace GL
 
     static std::vector<BufferLayout> g_vecGet{
         
-        { POS(  0.5f, 0.5f, 0.5f), TEX( 1.0f, 1.0f ), NORM(  0.0f,  0.0f, 1.0f ) },
-        { POS( -0.5f, 0.5f, 0.5f), TEX( 0.0f, 1.0f ), NORM(  0.0f,  0.0f, 1.0f ) },
-        { POS( -0.5f,-0.5f, 0.5f), TEX( 0.0f, 0.0f ), NORM(  0.0f,  0.0f, 1.0f ) },
-        { POS( -0.5f,-0.5f, 0.5f), TEX( 0.0f, 0.0f ), NORM(  0.0f,  0.0f, 1.0f ) },
-        { POS(  0.5f,-0.5f, 0.5f), TEX( 1.0f, 0.0f ), NORM(  0.0f,  0.0f, 1.0f ) },
-        { POS(  0.5f, 0.5f, 0.5f), TEX( 1.0f, 1.0f ), NORM(  0.0f,  0.0f, 1.0f ) },
-        { POS( -0.5f, 0.5f,-0.5f), TEX( 1.0f, 1.0f ), NORM(  0.0f,  0.0f,-1.0f ) },
-        { POS(  0.5f, 0.5f,-0.5f), TEX( 0.0f, 1.0f ), NORM(  0.0f,  0.0f,-1.0f ) },
-        { POS(  0.5f,-0.5f,-0.5f), TEX( 0.0f, 0.0f ), NORM(  0.0f,  0.0f,-1.0f ) },
-        { POS(  0.5f,-0.5f,-0.5f), TEX( 0.0f, 0.0f ), NORM(  0.0f,  0.0f,-1.0f ) },
-        { POS( -0.5f,-0.5f,-0.5f), TEX( 1.0f, 0.0f ), NORM(  0.0f,  0.0f,-1.0f ) },
-        { POS( -0.5f, 0.5f,-0.5f), TEX( 1.0f, 1.0f ), NORM(  0.0f,  0.0f,-1.0f ) },
-        { POS(  0.5f, 0.5f,-0.5f), TEX( 1.0f, 1.0f ), NORM(  1.0f,  0.0f, 0.0f ) },
-        { POS(  0.5f, 0.5f, 0.5f), TEX( 0.0f, 1.0f ), NORM(  1.0f,  0.0f, 0.0f ) },
-        { POS(  0.5f,-0.5f, 0.5f), TEX( 0.0f, 0.0f ), NORM(  1.0f,  0.0f, 0.0f ) },
-        { POS(  0.5f,-0.5f, 0.5f), TEX( 0.0f, 0.0f ), NORM(  1.0f,  0.0f, 0.0f ) },
-        { POS(  0.5f,-0.5f,-0.5f), TEX( 1.0f, 0.0f ), NORM(  1.0f,  0.0f, 0.0f ) },
-        { POS(  0.5f, 0.5f,-0.5f), TEX( 1.0f, 1.0f ), NORM(  1.0f,  0.0f, 0.0f ) },
-        { POS( -0.5f, 0.5f, 0.5f), TEX( 1.0f, 1.0f ), NORM( -1.0f,  0.0f, 0.0f ) },
-        { POS( -0.5f, 0.5f,-0.5f), TEX( 0.0f, 1.0f ), NORM( -1.0f,  0.0f, 0.0f ) },
-        { POS( -0.5f,-0.5f,-0.5f), TEX( 0.0f, 0.0f ), NORM( -1.0f,  0.0f, 0.0f ) },
-        { POS( -0.5f,-0.5f,-0.5f), TEX( 0.0f, 0.0f ), NORM( -1.0f,  0.0f, 0.0f ) },
-        { POS( -0.5f,-0.5f, 0.5f), TEX( 1.0f, 0.0f ), NORM( -1.0f,  0.0f, 0.0f ) },
-        { POS( -0.5f, 0.5f, 0.5f), TEX( 1.0f, 1.0f ), NORM( -1.0f,  0.0f, 0.0f ) },
-        { POS(  0.5f, 0.5f,-0.5f), TEX( 1.0f, 1.0f ), NORM(  0.0f,  1.0f, 0.0f ) },
-        { POS( -0.5f, 0.5f,-0.5f), TEX( 0.0f, 1.0f ), NORM(  0.0f,  1.0f, 0.0f ) },
-        { POS( -0.5f, 0.5f, 0.5f), TEX( 0.0f, 0.0f ), NORM(  0.0f,  1.0f, 0.0f ) },
-        { POS( -0.5f, 0.5f, 0.5f), TEX( 0.0f, 0.0f ), NORM(  0.0f,  1.0f, 0.0f ) },
-        { POS(  0.5f, 0.5f, 0.5f), TEX( 1.0f, 0.0f ), NORM(  0.0f,  1.0f, 0.0f ) },
-        { POS(  0.5f, 0.5f,-0.5f), TEX( 1.0f, 1.0f ), NORM(  0.0f,  1.0f, 0.0f ) },
-        { POS(  0.5f,-0.5f, 0.5f), TEX( 1.0f, 1.0f ), NORM(  0.0f, -1.0f, 0.0f ) },
-        { POS( -0.5f,-0.5f, 0.5f), TEX( 0.0f, 1.0f ), NORM(  0.0f, -1.0f, 0.0f ) },
-        { POS( -0.5f,-0.5f,-0.5f), TEX( 0.0f, 0.0f ), NORM(  0.0f, -1.0f, 0.0f ) },
-        { POS( -0.5f,-0.5f,-0.5f), TEX( 0.0f, 0.0f ), NORM(  0.0f, -1.0f, 0.0f ) },
-        { POS(  0.5f,-0.5f,-0.5f), TEX( 1.0f, 0.0f ), NORM(  0.0f, -1.0f, 0.0f ) },
-        { POS(  0.5f,-0.5f, 0.5f), TEX( 1.0f, 1.0f ), NORM(  0.0f, -1.0f, 0.0f ) }
+        { POS(  0.5f, 0.5f, 0.5f), glm::vec3( 1.0f, 1.0f, 1.0f ), TEX( 1.0f, 1.0f ), NORM(  0.0f,  0.0f, 1.0f ) },
+        { POS( -0.5f, 0.5f, 0.5f), glm::vec3( 1.0f, 1.0f, 1.0f ), TEX( 0.0f, 1.0f ), NORM(  0.0f,  0.0f, 1.0f ) },
+        { POS( -0.5f,-0.5f, 0.5f), glm::vec3( 1.0f, 1.0f, 1.0f ), TEX( 0.0f, 0.0f ), NORM(  0.0f,  0.0f, 1.0f ) },
+        { POS( -0.5f,-0.5f, 0.5f), glm::vec3( 1.0f, 1.0f, 1.0f ), TEX( 0.0f, 0.0f ), NORM(  0.0f,  0.0f, 1.0f ) },
+        { POS(  0.5f,-0.5f, 0.5f), glm::vec3( 1.0f, 1.0f, 1.0f ), TEX( 1.0f, 0.0f ), NORM(  0.0f,  0.0f, 1.0f ) },
+        { POS(  0.5f, 0.5f, 0.5f), glm::vec3( 1.0f, 1.0f, 1.0f ), TEX( 1.0f, 1.0f ), NORM(  0.0f,  0.0f, 1.0f ) },
+        { POS( -0.5f, 0.5f,-0.5f), glm::vec3( 1.0f, 1.0f, 1.0f ), TEX( 1.0f, 1.0f ), NORM(  0.0f,  0.0f,-1.0f ) },
+        { POS(  0.5f, 0.5f,-0.5f), glm::vec3( 1.0f, 1.0f, 1.0f ), TEX( 0.0f, 1.0f ), NORM(  0.0f,  0.0f,-1.0f ) },
+        { POS(  0.5f,-0.5f,-0.5f), glm::vec3( 1.0f, 1.0f, 1.0f ), TEX( 0.0f, 0.0f ), NORM(  0.0f,  0.0f,-1.0f ) },
+        { POS(  0.5f,-0.5f,-0.5f), glm::vec3( 1.0f, 1.0f, 1.0f ), TEX( 0.0f, 0.0f ), NORM(  0.0f,  0.0f,-1.0f ) },
+        { POS( -0.5f,-0.5f,-0.5f), glm::vec3( 1.0f, 1.0f, 1.0f ), TEX( 1.0f, 0.0f ), NORM(  0.0f,  0.0f,-1.0f ) },
+        { POS( -0.5f, 0.5f,-0.5f), glm::vec3( 1.0f, 1.0f, 1.0f ), TEX( 1.0f, 1.0f ), NORM(  0.0f,  0.0f,-1.0f ) },
+        { POS(  0.5f, 0.5f,-0.5f), glm::vec3( 1.0f, 1.0f, 1.0f ), TEX( 1.0f, 1.0f ), NORM(  1.0f,  0.0f, 0.0f ) },
+        { POS(  0.5f, 0.5f, 0.5f), glm::vec3( 1.0f, 1.0f, 1.0f ), TEX( 0.0f, 1.0f ), NORM(  1.0f,  0.0f, 0.0f ) },
+        { POS(  0.5f,-0.5f, 0.5f), glm::vec3( 1.0f, 1.0f, 1.0f ), TEX( 0.0f, 0.0f ), NORM(  1.0f,  0.0f, 0.0f ) },
+        { POS(  0.5f,-0.5f, 0.5f), glm::vec3( 1.0f, 1.0f, 1.0f ), TEX( 0.0f, 0.0f ), NORM(  1.0f,  0.0f, 0.0f ) },
+        { POS(  0.5f,-0.5f,-0.5f), glm::vec3( 1.0f, 1.0f, 1.0f ), TEX( 1.0f, 0.0f ), NORM(  1.0f,  0.0f, 0.0f ) },
+        { POS(  0.5f, 0.5f,-0.5f), glm::vec3( 1.0f, 1.0f, 1.0f ), TEX( 1.0f, 1.0f ), NORM(  1.0f,  0.0f, 0.0f ) },
+        { POS( -0.5f, 0.5f, 0.5f), glm::vec3( 1.0f, 1.0f, 1.0f ), TEX( 1.0f, 1.0f ), NORM( -1.0f,  0.0f, 0.0f ) },
+        { POS( -0.5f, 0.5f,-0.5f), glm::vec3( 1.0f, 1.0f, 1.0f ), TEX( 0.0f, 1.0f ), NORM( -1.0f,  0.0f, 0.0f ) },
+        { POS( -0.5f,-0.5f,-0.5f), glm::vec3( 1.0f, 1.0f, 1.0f ), TEX( 0.0f, 0.0f ), NORM( -1.0f,  0.0f, 0.0f ) },
+        { POS( -0.5f,-0.5f,-0.5f), glm::vec3( 1.0f, 1.0f, 1.0f ), TEX( 0.0f, 0.0f ), NORM( -1.0f,  0.0f, 0.0f ) },
+        { POS( -0.5f,-0.5f, 0.5f), glm::vec3( 1.0f, 1.0f, 1.0f ), TEX( 1.0f, 0.0f ), NORM( -1.0f,  0.0f, 0.0f ) },
+        { POS( -0.5f, 0.5f, 0.5f), glm::vec3( 1.0f, 1.0f, 1.0f ), TEX( 1.0f, 1.0f ), NORM( -1.0f,  0.0f, 0.0f ) },
+        { POS(  0.5f, 0.5f,-0.5f), glm::vec3( 1.0f, 1.0f, 1.0f ), TEX( 1.0f, 1.0f ), NORM(  0.0f,  1.0f, 0.0f ) },
+        { POS( -0.5f, 0.5f,-0.5f), glm::vec3( 1.0f, 1.0f, 1.0f ), TEX( 0.0f, 1.0f ), NORM(  0.0f,  1.0f, 0.0f ) },
+        { POS( -0.5f, 0.5f, 0.5f), glm::vec3( 1.0f, 1.0f, 1.0f ), TEX( 0.0f, 0.0f ), NORM(  0.0f,  1.0f, 0.0f ) },
+        { POS( -0.5f, 0.5f, 0.5f), glm::vec3( 1.0f, 1.0f, 1.0f ), TEX( 0.0f, 0.0f ), NORM(  0.0f,  1.0f, 0.0f ) },
+        { POS(  0.5f, 0.5f, 0.5f), glm::vec3( 1.0f, 1.0f, 1.0f ), TEX( 1.0f, 0.0f ), NORM(  0.0f,  1.0f, 0.0f ) },
+        { POS(  0.5f, 0.5f,-0.5f), glm::vec3( 1.0f, 1.0f, 1.0f ), TEX( 1.0f, 1.0f ), NORM(  0.0f,  1.0f, 0.0f ) },
+        { POS(  0.5f,-0.5f, 0.5f), glm::vec3( 1.0f, 1.0f, 1.0f ), TEX( 1.0f, 1.0f ), NORM(  0.0f, -1.0f, 0.0f ) },
+        { POS( -0.5f,-0.5f, 0.5f), glm::vec3( 1.0f, 1.0f, 1.0f ), TEX( 0.0f, 1.0f ), NORM(  0.0f, -1.0f, 0.0f ) },
+        { POS( -0.5f,-0.5f,-0.5f), glm::vec3( 1.0f, 1.0f, 1.0f ), TEX( 0.0f, 0.0f ), NORM(  0.0f, -1.0f, 0.0f ) },
+        { POS( -0.5f,-0.5f,-0.5f), glm::vec3( 1.0f, 1.0f, 1.0f ), TEX( 0.0f, 0.0f ), NORM(  0.0f, -1.0f, 0.0f ) },
+        { POS(  0.5f,-0.5f,-0.5f), glm::vec3( 1.0f, 1.0f, 1.0f ), TEX( 1.0f, 0.0f ), NORM(  0.0f, -1.0f, 0.0f ) },
+        { POS(  0.5f,-0.5f, 0.5f), glm::vec3( 1.0f, 1.0f, 1.0f ), TEX( 1.0f, 1.0f ), NORM(  0.0f, -1.0f, 0.0f ) }
     };
 
 }

@@ -24,7 +24,7 @@ namespace GL
     {
     public:
 
-        BatchRender_3D(ColorComponent& color);
+        BatchRender_3D();
         ~BatchRender_3D();
 
         void LoadShader(const char* shader_src);
@@ -48,8 +48,8 @@ namespace GL
 
         void DrawCube(const glm::mat4& transform, const glm::vec4& color);
 
-         ColorComponent& GetColorCom() const {return m_ColorCom;}
-         void SetColorCom(ColorComponent& color) {m_ColorCom = color;}
+        //ColorComponent& GetColorCom() const {return m_ColorCom;}
+        //void SetColorCom(ColorComponent& color) {m_ColorCom = color;}
 
     private:
 
@@ -79,7 +79,7 @@ namespace GL
 
         float m_MaxVertices{1000.0f};
         
-        ColorComponent& m_ColorCom;
+       // ColorComponent& m_ColorCom;
     };
 }
 

@@ -5,11 +5,10 @@
 
 namespace GL
 {
-    BatchRender_3D::BatchRender_3D(ColorComponent& color)
-        : m_ColorCom(color)
+    BatchRender_3D::BatchRender_3D()
     {
         m_pVAO = std::make_unique<VertexArray>();
-        m_pVBO = std::make_unique<VertexBuffer>(m_MaxVertices * 36 * 8 * sizeof(float));
+        m_pVBO = std::make_unique<VertexBuffer>(m_MaxVertices * 36 * 11 * sizeof(float));
 
         m_Shader = std::make_unique<Shader>();
         m_Texture = std::make_unique<Texture>();
@@ -17,13 +16,16 @@ namespace GL
         m_pVAO->Bind();
         m_pVBO->Bind();
 
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 11 * sizeof(float), (void*)0);
         glEnableVertexAttribArray(0);
 
-        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 11 * sizeof(float), (void*)(3 * sizeof(float)));
+        glEnableVertexAttribArray(2);
+
+        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 11 * sizeof(float), (void*)(6 * sizeof(float)));
         glEnableVertexAttribArray(1);
 
-        glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(5 * sizeof(float)));
+        glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 11 * sizeof(float), (void*)(8 * sizeof(float)));
         glEnableVertexAttribArray(2);
 
         m_pVAO->UnBind();
@@ -124,7 +126,7 @@ namespace GL
         m_Shader->Bind();
         m_Shader->SetInt("u_Texture", 0);
         m_Shader->SetFloat("u_Repeat", m_Repeat );
-        m_Shader->Set4f("u_Color", m_ColorCom.Color);
+        //m_Shader->Set4f("u_Color", m_ColorCom.Color);
         // texture attribute
         m_Shader->SetMat4( "u_Model", glm::mat4(1.0f) );
         // view matrix
@@ -136,7 +138,7 @@ namespace GL
     void BatchRender_3D::EndScene()
     {
         m_pVBO->Bind();
-        glBufferSubData(GL_ARRAY_BUFFER, 0, m_UsedVertices * 8 *sizeof(float), (float*)m_Vertices.data());
+        glBufferSubData(GL_ARRAY_BUFFER, 0, m_UsedVertices * 11 *sizeof(float), (float*)m_Vertices.data());
         glPolygonMode(GL_FRONT_AND_BACK, static_cast<uint32_t>(m_PolygonMode));
         glDrawArrays(GL_TRIANGLES, 0, 36 * m_CubeCnt);
 
@@ -159,6 +161,8 @@ namespace GL
         {
             glm::vec4 re = transform * glm::vec4{ g_vecGet[i].Pos.x, g_vecGet[i].Pos.y, g_vecGet[i].Pos.z, 1.0f };
             m_Vertices[m_UsedVertices].Pos = POS{re.x, re.y, re.z};
+
+            m_Vertices[m_UsedVertices].Color = glm::vec3{color.x, color.y, color.z};
 
             re = transform * glm::vec4{ g_vecGet[i].Tex.x, g_vecGet[i].Tex.y, 1.0f, 1.0f };
             m_Vertices[m_UsedVertices].Tex = TEX{re.x, re.y};

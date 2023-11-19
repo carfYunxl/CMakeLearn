@@ -9,9 +9,11 @@
 #include "OpenGLFrameBuffer.h"
 #include "BatchRender_3D.hpp"
 #include "Scene/Scene.h"
+#include "Panels/SceneHierarchyPanel.h"
 
 namespace GL
 {
+    class SceneHierarchyPanel;
     class GL_EditorLayer : public Layer
     {
     public:
@@ -62,6 +64,7 @@ namespace GL
 
         std::unique_ptr<Scene> m_ActiveScene;
 
+        SceneHierarchyPanel mPanel;
     };
 }
 

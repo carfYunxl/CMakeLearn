@@ -9,6 +9,7 @@
 namespace GL {
 
 	class Entity;
+	class SceneHierarchyPanel;
 	class Scene
 	{
 	public:
@@ -28,6 +29,7 @@ namespace GL {
 		entt::registry m_Registry;
 
 		friend class Entity;
+		friend class SceneHierarchyPanel;
 	};
 
 }

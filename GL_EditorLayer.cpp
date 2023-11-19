@@ -40,18 +40,35 @@ namespace GL
 
     void GL_EditorLayer::OnAttach()
     {
-
         FramebufferSpecification fbSpec;
         fbSpec.Width = 1920;
         fbSpec.Height = 1080;
         m_FrameBuffer = std::make_unique<OpenGLFramebuffer>(fbSpec);
 
         m_ActiveScene = std::make_unique<Scene>();
-        auto& cube = (Entity)m_ActiveScene->CreateEntity("Cube");
-        auto& color = cube.AddComponent<ColorComponent>();
+        auto& cube1 = (Entity)m_ActiveScene->CreateEntity("Red Cube");
+        cube1.AddComponent<ColorComponent>(glm::vec4{1.0f, 0.0f, 0.0f, 1.0f});
 
-        m_BatchRenderer = new BatchRender_3D(color);
+        auto& cube2 = (Entity)m_ActiveScene->CreateEntity("Green Cube");
+        cube2.AddComponent<ColorComponent>(glm::vec4{0.0f, 1.0f, 0.0f, 1.0f});
+        cube2.GetComponent<TransformComponent>().Transform = glm::translate(glm::mat4(1.0), {1.2f,0.0f,0.0f});
+
+        auto& cube3 = (Entity)m_ActiveScene->CreateEntity("Blue Cube");
+        cube3.AddComponent<ColorComponent>(glm::vec4{0.0f, 0.0f, 1.0f, 1.0f});
+        cube3.GetComponent<TransformComponent>().Transform = glm::translate(glm::mat4(1.0), {2.4f,0.0f,0.0f});
+
+        auto& cube4= (Entity)m_ActiveScene->CreateEntity("Yellow Cube");
+        cube4.AddComponent<ColorComponent>(glm::vec4{1.0f, 1.0f, 0.0f, 1.0f});
+        cube4.GetComponent<TransformComponent>().Transform = glm::translate(glm::mat4(1.0), {3.6f,0.0f,0.0f});
+
+        auto& cube5= (Entity)m_ActiveScene->CreateEntity("Pink Cube");
+        cube5.AddComponent<ColorComponent>(glm::vec4{1.0f, 0.0f, 1.0f, 1.0f});
+        cube5.GetComponent<TransformComponent>().Transform = glm::translate(glm::mat4(1.0), {4.8f,0.0f,0.0f});
+
+        m_BatchRenderer = new BatchRender_3D();
         m_BatchRenderer->OnAttach();
+
+        mPanel.SetContext(m_ActiveScene.get());
     }
 
     void GL_EditorLayer::OnDetach()
@@ -110,6 +127,8 @@ namespace GL
         }
 
         ImGui::End();
+
+        mPanel.OnRender();
 
         ImGui::Begin("Camera Settings");
         if(ImGui::InputFloat3("Position", glm::value_ptr(m_Camera.CameraPos())))
@@ -173,7 +192,7 @@ namespace GL
         ImGui::DragFloat("view distance",m_Camera.vDistance(), 1.0f, 1000.0f, 10000.0f);
         ImGui::DragFloat("repeat", m_BatchRenderer->GetRepeat(), 1.0f, 1.0f, 100.0f);
 
-        ImGui::ColorPicker4("Component Color", glm::value_ptr(m_BatchRenderer->GetColorCom().Color));
+        //ImGui::ColorPicker4("Component Color", glm::value_ptr(m_BatchRenderer->GetColorCom().Color));
 
         ImGui::Text("Draw calls : %d", m_BatchRenderer->GetDrawCall());
 

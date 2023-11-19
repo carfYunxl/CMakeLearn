@@ -38,6 +38,8 @@ namespace GL
 		}
 
 		operator bool() const { return m_EntityHandle != static_cast<entt::entity>(0); }
+
+		uint32_t toInt() const {return static_cast<uint32_t>(m_EntityHandle);}
 	private:
 		entt::entity m_EntityHandle{ 0 };
 		Scene* m_Scene{nullptr};

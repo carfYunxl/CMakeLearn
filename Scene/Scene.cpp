@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "Scene.h"
 #include "Components.h"
-#include "../src/BatchRender_3D.hpp"
+#include "BatchRender_3D.hpp"
 #include "Entity.h"
 
 namespace GL

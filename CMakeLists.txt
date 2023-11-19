@@ -7,6 +7,7 @@ project(GEditor)
 
 aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/src SRC)
 aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/Scene  SceneSRC)
+aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/Panels PanelSRC)
 aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/GLAD/src SRC_GLAD)
 aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/stb SRC_STB)
 aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/imgui IMGUI_SRC1)
@@ -19,6 +20,7 @@ set(EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_SOURCE_DIR}/bin)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/Scene)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/Panels)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/glm)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/stb)
@@ -32,4 +34,4 @@ link_directories(${CMAKE_CURRENT_SOURCE_DIR}/GLFW/lib)
 
 link_libraries(glfw3.lib opengl32.lib)
 
-add_executable(GEditor ${SRC} ${SRC_STB} ${IMGUI_SRC1}  ${IMGUI_SRC2} ${SRC_GLAD} ${ENTT_SRC} ${SceneSRC} GL_EditorLayer.h GL_EditorLayer.cpp GL_App.cpp )
+add_executable(GEditor ${SRC} ${SRC_STB} ${IMGUI_SRC1}  ${IMGUI_SRC2} ${SRC_GLAD} ${ENTT_SRC} ${SceneSRC} ${PanelSRC} GL_EditorLayer.h GL_EditorLayer.cpp GL_App.cpp )
