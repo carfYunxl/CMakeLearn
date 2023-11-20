@@ -32,7 +32,7 @@ namespace GL
 
         // update scene
         m_BatchRenderer->BeginScene(m_Camera);
-        m_ActiveScene->OnUpdate(*m_BatchRenderer, ts);
+        m_ActiveScene->OnUpdate(*m_BatchRenderer.get(), ts);
         m_BatchRenderer->EndScene();
 
         m_FrameBuffer->Unbind();
@@ -65,10 +65,10 @@ namespace GL
         cube5.AddComponent<ColorComponent>(glm::vec4{1.0f, 0.0f, 1.0f, 1.0f});
         cube5.GetComponent<TransformComponent>().Transform = glm::translate(glm::mat4(1.0), {4.8f,0.0f,0.0f});
 
-        m_BatchRenderer = new BatchRender_3D();
+        m_BatchRenderer = std::make_unique<BatchRender_3D>();
         m_BatchRenderer->OnAttach();
 
-        mPanel.SetContext(m_ActiveScene.get());
+        m_SceneHerarchyPanel.SetContext(m_ActiveScene.get());
     }
 
     void GL_EditorLayer::OnDetach()
@@ -128,7 +128,8 @@ namespace GL
 
         ImGui::End();
 
-        mPanel.OnRender();
+        // Scene Hierarchy Panel
+        m_SceneHerarchyPanel.OnRender();
 
         ImGui::Begin("Camera Settings");
         if(ImGui::InputFloat3("Position", glm::value_ptr(m_Camera.CameraPos())))
@@ -198,29 +199,6 @@ namespace GL
 
         ImGui::DragFloat("Max Vertices", m_BatchRenderer->GetMaxVertices(), 100.0f, 500.0f, 50000.0f);
 
-        ImGui::End();
-
-        ImGui::Begin("Obj");
-        ImGui::DragFloat3("Position", glm::value_ptr(m_CubeAttr.m_Pos));
-        ImGui::DragFloat3("Rotation", glm::value_ptr(m_CubeAttr.m_Rotation));
-
-        
-        ImGui::DragFloat3("Scale", glm::value_ptr(m_CubeAttr.m_Scale));
-        ImGui::ColorPicker3("Color", glm::value_ptr(m_CubeAttr.m_Color));
-        ImGui::End();
-
-        ImGui::Begin("Ano Obj");
-        ImGui::DragFloat3("Position", glm::value_ptr(m_AnotherCubeAttr.m_Pos));
-        ImGui::DragFloat3("Rotation", glm::value_ptr(m_AnotherCubeAttr.m_Rotation));
-        ImGui::DragFloat3("Scale", glm::value_ptr(m_AnotherCubeAttr.m_Scale));
-        ImGui::ColorPicker3("Color", glm::value_ptr(m_AnotherCubeAttr.m_Color));
-        ImGui::End();
-
-        ImGui::Begin("Light");
-        ImGui::DragFloat3("Position", glm::value_ptr(m_LightAttr.m_Pos));
-        ImGui::DragFloat3("Rotation", glm::value_ptr(m_LightAttr.m_Rotation));
-        ImGui::DragFloat3("Scale", glm::value_ptr(m_LightAttr.m_Scale));
-        ImGui::ColorPicker3("Color", glm::value_ptr(m_LightAttr.m_Color));
         ImGui::End();
 
         ImGui::PushStyleVar( ImGuiStyleVar_WindowPadding, ImVec2{0,0} );

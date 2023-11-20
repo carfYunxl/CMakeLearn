@@ -17,10 +17,11 @@ namespace GL
         void OnRender();
     private:
         void DrawEntityNode(Entity entity);
+        void DrawComponents(Entity entity);
     private:
         Scene* m_Scene;
         friend class Scene;
-        Entity m_SelectEntity;
+        Entity m_SelectedEntity;
     };
 }
 

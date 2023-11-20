@@ -30,7 +30,7 @@ namespace GL
         virtual void OnEvent(Event& event) override;
     private:
         Camera          m_Camera{1.778f};
-        BatchRender_3D*  m_BatchRenderer;
+        std::unique_ptr<BatchRender_3D>  m_BatchRenderer;
 
         Attribute   m_CubeAttr{
             {0.0f, 0.0f, 0.0f},
@@ -64,7 +64,7 @@ namespace GL
 
         std::unique_ptr<Scene> m_ActiveScene;
 
-        SceneHierarchyPanel mPanel;
+        SceneHierarchyPanel m_SceneHerarchyPanel;
     };
 }
 

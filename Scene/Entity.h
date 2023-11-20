@@ -28,7 +28,7 @@ namespace GL
 		template<typename T>
 		bool HasComponent()
 		{
-			return m_Scene->m_Registry.has<T>(m_EntityHandle);
+			return m_Scene->m_Registry.all_of<T>(m_EntityHandle);
 		}
 
 		template<typename T>
@@ -37,11 +37,19 @@ namespace GL
 			m_Scene->m_Registry.remove<T>(m_EntityHandle);
 		}
 
-		operator bool() const { return m_EntityHandle != static_cast<entt::entity>(0); }
+		operator bool() const { return m_EntityHandle != entt::null; }
 
 		uint32_t toInt() const {return static_cast<uint32_t>(m_EntityHandle);}
+
+		bool operator==(const Entity& other){
+			return (*this).m_EntityHandle == other.m_EntityHandle && (*this).m_Scene == other.m_Scene;
+		}
+
+		bool operator!=(const Entity& other){
+			return !operator==(other);
+		}
 	private:
-		entt::entity m_EntityHandle{ 0 };
+		entt::entity m_EntityHandle{ entt::null };
 		Scene* m_Scene{nullptr};
 	};
 
