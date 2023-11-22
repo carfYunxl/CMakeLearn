@@ -51,19 +51,15 @@ namespace GL
 
         auto& cube2 = (Entity)m_ActiveScene->CreateEntity("Green Cube");
         cube2.AddComponent<ColorComponent>(glm::vec4{0.0f, 1.0f, 0.0f, 1.0f});
-        cube2.GetComponent<TransformComponent>().Transform = glm::translate(glm::mat4(1.0), {1.2f,0.0f,0.0f});
 
         auto& cube3 = (Entity)m_ActiveScene->CreateEntity("Blue Cube");
         cube3.AddComponent<ColorComponent>(glm::vec4{0.0f, 0.0f, 1.0f, 1.0f});
-        cube3.GetComponent<TransformComponent>().Transform = glm::translate(glm::mat4(1.0), {2.4f,0.0f,0.0f});
 
         auto& cube4= (Entity)m_ActiveScene->CreateEntity("Yellow Cube");
         cube4.AddComponent<ColorComponent>(glm::vec4{1.0f, 1.0f, 0.0f, 1.0f});
-        cube4.GetComponent<TransformComponent>().Transform = glm::translate(glm::mat4(1.0), {3.6f,0.0f,0.0f});
 
         auto& cube5= (Entity)m_ActiveScene->CreateEntity("Pink Cube");
         cube5.AddComponent<ColorComponent>(glm::vec4{1.0f, 0.0f, 1.0f, 1.0f});
-        cube5.GetComponent<TransformComponent>().Transform = glm::translate(glm::mat4(1.0), {4.8f,0.0f,0.0f});
 
         m_BatchRenderer = std::make_unique<BatchRender_3D>();
         m_BatchRenderer->OnAttach();

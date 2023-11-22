@@ -5,6 +5,7 @@
 #include "TimeStep.h"
 #include "BatchRender_3D.hpp"
 #include <string>
+#include <list>
 
 namespace GL {
 
@@ -25,8 +26,12 @@ namespace GL {
 
 		void OnUpdate(BatchRender_3D& rendeer, Timestep ts);
 
+		void DestroyEntity(Entity entity);
+
 	private:
 		entt::registry m_Registry;
+
+		std::list<Entity> m_EntityList;
 
 		friend class Entity;
 		friend class SceneHierarchyPanel;

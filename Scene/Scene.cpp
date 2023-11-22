@@ -12,6 +12,9 @@ namespace GL
 		entity.AddComponent<TransformComponent>();
 		auto& tag = entity.AddComponent<TagComponent>();
 		tag.Tag = name.empty() ? "Entity" : name;
+
+		m_EntityList.push_back(entity);
+
 		return entity;
 	}
 
@@ -21,7 +24,13 @@ namespace GL
 		for (auto entity : group)
 		{
 			auto& [transform, color] = group.get<TransformComponent, ColorComponent>(entity);
-			rendener.DrawCube(transform.Transform, color.Color);
+			rendener.DrawCube(transform.GetTransform(), color.Color);
 		}
+	}
+
+	void Scene::DestroyEntity(Entity entity)
+	{
+		m_EntityList.remove( entity );
+		m_Registry.destroy( entity.GetHandleID() );
 	}
 }

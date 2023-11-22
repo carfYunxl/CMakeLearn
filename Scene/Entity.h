@@ -48,6 +48,8 @@ namespace GL
 		bool operator!=(const Entity& other){
 			return !operator==(other);
 		}
+
+		entt::entity GetHandleID() const { return m_EntityHandle;}
 	private:
 		entt::entity m_EntityHandle{ entt::null };
 		Scene* m_Scene{nullptr};
