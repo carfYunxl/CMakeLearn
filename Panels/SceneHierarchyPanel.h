@@ -24,7 +24,7 @@ namespace GL
     private:
         Scene* m_Scene;
         friend class Scene;
-        Entity m_SelectedEntity;
+        Entity m_SelectedEntity{};
     };
 }
 

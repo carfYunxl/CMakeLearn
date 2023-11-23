@@ -31,7 +31,7 @@ namespace GL {
 	private:
 		entt::registry m_Registry;
 
-		std::list<Entity> m_EntityList;
+		//std::list<Entity> m_EntityList;
 
 		friend class Entity;
 		friend class SceneHierarchyPanel;

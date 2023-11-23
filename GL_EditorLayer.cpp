@@ -46,20 +46,6 @@ namespace GL
         m_FrameBuffer = std::make_unique<OpenGLFramebuffer>(fbSpec);
 
         m_ActiveScene = std::make_unique<Scene>();
-        auto& cube1 = (Entity)m_ActiveScene->CreateEntity("Red Cube");
-        cube1.AddComponent<ColorComponent>(glm::vec4{1.0f, 0.0f, 0.0f, 1.0f});
-
-        auto& cube2 = (Entity)m_ActiveScene->CreateEntity("Green Cube");
-        cube2.AddComponent<ColorComponent>(glm::vec4{0.0f, 1.0f, 0.0f, 1.0f});
-
-        auto& cube3 = (Entity)m_ActiveScene->CreateEntity("Blue Cube");
-        cube3.AddComponent<ColorComponent>(glm::vec4{0.0f, 0.0f, 1.0f, 1.0f});
-
-        auto& cube4= (Entity)m_ActiveScene->CreateEntity("Yellow Cube");
-        cube4.AddComponent<ColorComponent>(glm::vec4{1.0f, 1.0f, 0.0f, 1.0f});
-
-        auto& cube5= (Entity)m_ActiveScene->CreateEntity("Pink Cube");
-        cube5.AddComponent<ColorComponent>(glm::vec4{1.0f, 0.0f, 1.0f, 1.0f});
 
         m_BatchRenderer = std::make_unique<BatchRender_3D>();
         m_BatchRenderer->OnAttach();
@@ -200,7 +186,6 @@ namespace GL
         ImGui::PushStyleVar( ImGuiStyleVar_WindowPadding, ImVec2{0,0} );
 
         ImGui::Begin("ViewPort");
-
         m_ViewportFocused = ImGui::IsWindowFocused();
         m_ViewportHovered = ImGui::IsWindowHovered();
         App::Get().GetImGuiLayer()->BlockEvents(!m_ViewportFocused || !m_ViewportHovered);
@@ -214,6 +199,18 @@ namespace GL
             m_Camera.Update();
         }
         uint32_t textureID = m_FrameBuffer->GetColorAttachmentRendererID();
+        ImGui::Image((void*)textureID, ImVec2{ m_ViewPortSize.x, m_ViewPortSize.y }, ImVec2{0,1}, ImVec2{1,0});
+        ImGui::End();
+
+        ImGui::Begin("ViewPort2");
+        ImGui::Image((void*)textureID, ImVec2{ m_ViewPortSize.x, m_ViewPortSize.y }, ImVec2{0,1}, ImVec2{1,0});
+        ImGui::End();
+
+        ImGui::Begin("ViewPort3");
+        ImGui::Image((void*)textureID, ImVec2{ m_ViewPortSize.x, m_ViewPortSize.y }, ImVec2{0,1}, ImVec2{1,0});
+        ImGui::End();
+
+        ImGui::Begin("ViewPort4");
         ImGui::Image((void*)textureID, ImVec2{ m_ViewPortSize.x, m_ViewPortSize.y }, ImVec2{0,1}, ImVec2{1,0});
         ImGui::End();
 

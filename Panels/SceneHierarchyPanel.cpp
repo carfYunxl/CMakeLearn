@@ -91,7 +91,7 @@ namespace GL
 			ImGui::PopStyleVar(
 			);
 			ImGui::SameLine(contentRegionAvailable.x - lineHeight * 0.5f);
-			if (ImGui::Button("+", ImVec2{ lineHeight, lineHeight }))
+			if (ImGui::Button("-", ImVec2{ lineHeight, lineHeight }))
 			{
 				ImGui::OpenPopup("ComponentSettings");
 			}
@@ -128,23 +128,27 @@ namespace GL
     {
         ImGui::Begin("Scene Hierarchy");
 
-		m_Scene->m_Registry.each([&](auto entityID){
+		if(m_Scene)
+		{
+			m_Scene->m_Registry.each([&](auto entityID){
 				Entity entity{entityID, m_Scene};
 				DrawEntityNode(entity);
         	});
 
-		if(ImGui::IsMouseDown(0) && ImGui::IsWindowHovered())
-			m_SelectedEntity = {};
+			if(ImGui::IsMouseDown(0) && ImGui::IsWindowHovered())
+				m_SelectedEntity = {};
 
-		// Right-click on blank space
-		if (ImGui::BeginPopupContextWindow(NULL, ImGuiPopupFlags_MouseButtonRight))
-		{
-			if (ImGui::MenuItem("Create Empty Entity"))
-				m_Scene->CreateEntity("Empty Entity");
+			if( m_Scene->m_Registry.alive() == 0 )
+			{
+				if ( ImGui::BeginPopupContextWindow("hello", 1) )
+				{
+					if (ImGui::MenuItem("Create Empty Entity"))
+					m_Scene->CreateEntity("Empty Entity");
 
-			ImGui::EndPopup();
+					ImGui::EndPopup();
+				}
+			}
 		}
-
         ImGui::End();
 
         ImGui::Begin("Properties");
@@ -161,28 +165,30 @@ namespace GL
 		
 		ImGuiTreeNodeFlags flags = ((m_SelectedEntity == entity) ? ImGuiTreeNodeFlags_Selected : 0) | ImGuiTreeNodeFlags_OpenOnArrow;
 		flags |= ImGuiTreeNodeFlags_SpanAvailWidth;
-		bool opened = ImGui::TreeNodeEx((void*)(uint64_t)(uint32_t)entity, flags, tag.c_str());
-		if (ImGui::IsItemClicked())
+		if( ImGui::TreeNodeEx((const void*)(intptr_t)entity.toInt(), flags, tag.c_str()) )
+		{
+			ImGui::Text("Hello");
+    		ImGui::TreePop();
+		}
+
+		// if ( ImGui::IsItemHovered() )
+		// 	ImGui::SetTooltip("Right-click to delete.");
+
+		if ( ImGui::IsItemClicked() )
 		{
 			m_SelectedEntity = entity;
 		}
-
 		bool entityDeleted = false;
-		if ( ImGui::BeginPopupContextItem() )
+		
+		if ( ImGui::BeginPopupContextItem(std::to_string(entity.toInt()).c_str(), 1) )
 		{
-			if (ImGui::MenuItem("Delete Entity"))
+			if ( ImGui::MenuItem("Delete Entity") )
 				entityDeleted = true;
 
-			ImGui::EndPopup();
-		}
+			if (ImGui::MenuItem("Create Empty Entity"))
+				m_Scene->CreateEntity("Empty Entity");
 
-		if (opened)
-		{
-			ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth;
-			bool opened = ImGui::TreeNodeEx((void*)9817239, flags, tag.c_str());
-			if (opened)
-				ImGui::TreePop();
-			ImGui::TreePop();
+			ImGui::EndPopup();
 		}
 
 		if (entityDeleted)
@@ -219,6 +225,7 @@ namespace GL
 			//DisplayAddComponentEntry<CameraComponent>("Camera");
 			//DisplayAddComponentEntry<ScriptComponent>("Script");
 			DisplayAddComponentEntry<ColorComponent>("Color");
+			DisplayAddComponentEntry<TransformComponent>("Transform");
 			//DisplayAddComponentEntry<CircleRendererComponent>("Circle Renderer");
 			//DisplayAddComponentEntry<Rigidbody2DComponent>("Rigidbody 2D");
 			//DisplayAddComponentEntry<BoxCollider2DComponent>("Box Collider 2D");

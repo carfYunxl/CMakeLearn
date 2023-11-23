@@ -3,6 +3,7 @@
 #include "Components.h"
 #include "BatchRender_3D.hpp"
 #include "Entity.h"
+#include <random>
 
 namespace GL
 {
@@ -10,11 +11,11 @@ namespace GL
 	{
 		Entity entity = { m_Registry.create(), this };
 		entity.AddComponent<TransformComponent>();
+
 		auto& tag = entity.AddComponent<TagComponent>();
-		tag.Tag = name.empty() ? "Entity" : name;
+		tag.Tag = name.empty() ? "Empty Entity" : name;
 
-		m_EntityList.push_back(entity);
-
+		//m_EntityList.push_back(entity);
 		return entity;
 	}
 
@@ -30,7 +31,7 @@ namespace GL
 
 	void Scene::DestroyEntity(Entity entity)
 	{
-		m_EntityList.remove( entity );
+		//m_EntityList.remove( entity );
 		m_Registry.destroy( entity.GetHandleID() );
 	}
 }
