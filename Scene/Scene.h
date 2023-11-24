@@ -34,6 +34,7 @@ namespace GL {
 		//std::list<Entity> m_EntityList;
 
 		friend class Entity;
+		friend class SceneSerializer;
 		friend class SceneHierarchyPanel;
 	};
 

@@ -50,6 +50,11 @@ namespace GL {
 		ColorComponent(const glm::vec4& color)
 			: Color(color) {}
 	};
+
+	struct CameraComponent
+	{
+		
+	};
 }
 
 #endif //COMPONENTS_H_

@@ -202,18 +202,6 @@ namespace GL
         ImGui::Image((void*)textureID, ImVec2{ m_ViewPortSize.x, m_ViewPortSize.y }, ImVec2{0,1}, ImVec2{1,0});
         ImGui::End();
 
-        ImGui::Begin("ViewPort2");
-        ImGui::Image((void*)textureID, ImVec2{ m_ViewPortSize.x, m_ViewPortSize.y }, ImVec2{0,1}, ImVec2{1,0});
-        ImGui::End();
-
-        ImGui::Begin("ViewPort3");
-        ImGui::Image((void*)textureID, ImVec2{ m_ViewPortSize.x, m_ViewPortSize.y }, ImVec2{0,1}, ImVec2{1,0});
-        ImGui::End();
-
-        ImGui::Begin("ViewPort4");
-        ImGui::Image((void*)textureID, ImVec2{ m_ViewPortSize.x, m_ViewPortSize.y }, ImVec2{0,1}, ImVec2{1,0});
-        ImGui::End();
-
         ImGui::PopStyleVar();
     }
 

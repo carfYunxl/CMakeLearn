@@ -24,6 +24,7 @@ namespace GL
     private:
         Scene* m_Scene;
         friend class Scene;
+        friend class SceneSerializer;
         Entity m_SelectedEntity{};
     };
 }
