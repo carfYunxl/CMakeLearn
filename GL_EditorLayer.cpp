@@ -9,6 +9,8 @@
 #include "backends/imgui_impl_opengl3.h"
 #include "Scene/Entity.h"
 #include "Scene/Components.h"
+#include "SceneSerializer.h"
+#include "Scene/PlatformUtils.h"
 
 namespace GL
 {
@@ -98,11 +100,23 @@ namespace GL
         {
             if (ImGui::BeginMenu("File"))
             {
-                if (ImGui::MenuItem("Exit")) 
-                {
-                    GL::App::Get().Close();
-                }
-                ImGui::EndMenu();
+               if (ImGui::MenuItem("Open ", "Ctrl+O"))
+					OpenScene();
+
+				ImGui::Separator();
+
+				if (ImGui::MenuItem("New Scene", "Ctrl+N"))
+					NewScene();
+
+				if (ImGui::MenuItem("Save Scene As...", "Ctrl+Shift+S"))
+					SaveSceneAs();
+
+				ImGui::Separator();
+
+				if (ImGui::MenuItem("Exit"))
+					App::Get().Close();
+				
+				ImGui::EndMenu();
             }
 
             ImGui::EndMenuBar();
@@ -209,4 +223,43 @@ namespace GL
     {
         m_Camera.OnEvent(event);
     }
+
+    void GL_EditorLayer::NewScene()
+	{
+		m_ActiveScene = std::make_unique<Scene>();
+		m_SceneHerarchyPanel.SetContext(m_ActiveScene.get());
+	}
+
+	void GL_EditorLayer::OpenScene()
+	{
+		std::string filepath = FileDialogs::OpenFile("River Scene (*.river)\0*.river\0");
+		if (!filepath.empty())
+			OpenScene(filepath);
+	}
+
+	void GL_EditorLayer::OpenScene(const std::filesystem::path& path)
+	{
+		if (path.extension().string() != ".river")
+		{
+			return;
+		}
+		
+        m_ActiveScene = std::make_unique<Scene>();
+		SceneSerializer serializer(m_ActiveScene.get());
+		if ( serializer.Deserialize(path.string()) )
+		{
+			m_SceneHerarchyPanel.SetContext(m_ActiveScene.get());
+		}
+	}
+
+	void GL_EditorLayer::SaveSceneAs()
+	{
+		std::string filepath = FileDialogs::SaveFile("River Scene (*.river)\0*.river\0");
+		if ( !filepath.empty() )
+		{
+		    SceneSerializer serializer(m_ActiveScene.get());
+			serializer.Serialize(filepath);
+		}
+	}
+
 }

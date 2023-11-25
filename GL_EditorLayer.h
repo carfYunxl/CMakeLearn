@@ -10,6 +10,7 @@
 #include "BatchRender_3D.hpp"
 #include "Scene/Scene.h"
 #include "Panels/SceneHierarchyPanel.h"
+#include <filesystem>
 
 namespace GL
 {
@@ -28,6 +29,12 @@ namespace GL
         virtual void OnImGuiRender() override;
 
         virtual void OnEvent(Event& event) override;
+    private:
+        void NewScene();
+        void OpenScene();
+        void OpenScene(const std::filesystem::path& path);
+        void SaveSceneAs();
+
     private:
         Camera          m_Camera{1.778f};
         std::unique_ptr<BatchRender_3D>  m_BatchRenderer;

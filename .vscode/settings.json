@@ -82,7 +82,9 @@
         "set": "cpp",
         "unordered_set": "cpp",
         "xtree": "cpp",
-        "random": "cpp"
+        "random": "cpp",
+        "stack": "cpp",
+        "valarray": "cpp"
     },
     "C_Cpp.errorSquiggles": "disabled",
     "editor.scrollbar.horizontalScrollbarSize": 10,
@@ -93,6 +95,6 @@
     "terminal.integrated.fontSize": 10,
     "chat.editor.fontSize": 10,
     "markdown.preview.fontSize": 10,
-    "window.zoomLevel": 3,
+    "window.zoomLevel": 2,
     "screencastMode.fontSize": 50
 }

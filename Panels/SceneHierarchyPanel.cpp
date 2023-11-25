@@ -122,6 +122,7 @@ namespace GL
     void SceneHierarchyPanel::SetContext(Scene* scene)
     {
         m_Scene = scene;
+		m_SelectedEntity = {};
     }
 
     void SceneHierarchyPanel::OnRender()

@@ -34,6 +34,6 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/yaml-cpp)
 link_directories(${CMAKE_CURRENT_SOURCE_DIR}/GLFW/lib)
 link_directories(${CMAKE_CURRENT_SOURCE_DIR}/yaml-cpp/lib)
 
-link_libraries(glfw3.lib opengl32.lib yaml-cppd.lib yaml-cpp.lib)
+link_libraries(glfw3.lib opengl32.lib yaml-cpp.lib)
 
 add_executable(GEditor ${SRC} ${SRC_STB} ${IMGUI_SRC1}  ${IMGUI_SRC2} ${SRC_GLAD} ${ENTT_SRC} ${SceneSRC} ${PanelSRC} GL_EditorLayer.h GL_EditorLayer.cpp GL_App.cpp )
