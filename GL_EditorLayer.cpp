@@ -11,6 +11,11 @@
 #include "Scene/Components.h"
 #include "SceneSerializer.h"
 #include "Scene/PlatformUtils.h"
+#include "ImGuizmo.h"
+#include "GLMath.h"
+#include "WindowsInput.h"
+#include "KeyCodes.h"
+#include "MouseCodes.h"
 
 namespace GL
 {
@@ -143,6 +148,8 @@ namespace GL
             m_Camera.Update();
         }
 
+        ImGui::Text("selected entity : %d", m_SceneHerarchyPanel.GetSelectEntity().toInt());
+
         ImGui::Text("View Direction");
 
         if( ImGui::Button("Z", ImVec2(50,35)) )
@@ -214,6 +221,60 @@ namespace GL
         }
         uint32_t textureID = m_FrameBuffer->GetColorAttachmentRendererID();
         ImGui::Image((void*)textureID, ImVec2{ m_ViewPortSize.x, m_ViewPortSize.y }, ImVec2{0,1}, ImVec2{1,0});
+
+        //Gizmos
+        Entity entitySelected = m_SceneHerarchyPanel.GetSelectEntity();
+        if( entitySelected.isValid() && m_GizmoType != -1 )
+        {
+            ImGui::Begin("zmo");
+            ImGui::Text("ImGuizmo running...");
+            ImGui::End();
+
+            ImGuizmo::SetOrthographic(false);
+            ImGuizmo::SetDrawlist();
+
+            float width = (float)ImGui::GetWindowWidth();
+            float height = (float)ImGui::GetWindowHeight();
+            ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, width, height);
+
+            // Camera
+            glm::mat4 cameraProj = m_Camera.GetProjection();
+            glm::mat4 cameraView = m_Camera.GetView();
+
+            //Entity transform
+            auto& transformComponent = entitySelected.GetComponent<TransformComponent>();
+            glm::mat4 transform = transformComponent.GetTransform();
+
+            bool snap = WindowsInput::IsKeyPressed(Key::LeftControl);
+            float snapValue = 0.5f;
+            if(m_GizmoType == ImGuizmo::OPERATION::ROTATE)
+            {
+                snapValue = 45.0f;
+            }
+            float snapValues[3]{snapValue,snapValue,snapValue};
+
+            ImGuizmo::Manipulate(
+                glm::value_ptr(cameraView),
+                glm::value_ptr(cameraProj), 
+                (ImGuizmo::OPERATION)m_GizmoType, 
+                ImGuizmo::MODE::LOCAL, 
+                glm::value_ptr(transform),
+                nullptr,
+                snap ? snapValues : nullptr);
+
+            if( ImGuizmo::IsUsing() )
+            {
+                glm::vec3 translate, rotate, scale;
+                auto trans = ExtractTRS( transform, translate, rotate, scale );
+                transformComponent.Translation = translate;
+                transformComponent.Scale = scale;
+
+                glm::vec3 deltaRotate = rotate - transformComponent.Rotation;
+
+                transformComponent.Rotation += deltaRotate;
+            }
+        }
+
         ImGui::End();
 
         ImGui::PopStyleVar();
@@ -222,6 +283,10 @@ namespace GL
     void GL_EditorLayer::OnEvent(Event& event)
     {
         m_Camera.OnEvent(event);
+
+        EventDispatcher dispatcher(event);
+		dispatcher.Dispatch<KeyPressedEvent>(BIND_EVENT_FN(GL_EditorLayer::OnKeyPressed));
+		dispatcher.Dispatch<MouseButtonPressedEvent>(BIND_EVENT_FN(GL_EditorLayer::OnMouseButtonPressed));
     }
 
     void GL_EditorLayer::NewScene()
@@ -261,5 +326,85 @@ namespace GL
 			serializer.Serialize(filepath);
 		}
 	}
+
+    bool GL_EditorLayer::OnKeyPressed(KeyPressedEvent& e)
+    {
+        if ( e.GetRepeatCount() > 1 )
+			return false;
+
+		bool control = WindowsInput::IsKeyPressed(Key::LeftControl) || WindowsInput::IsKeyPressed(Key::RightControl);
+		bool shift = WindowsInput::IsKeyPressed(Key::LeftShift) || WindowsInput::IsKeyPressed(Key::RightShift);
+
+		switch ( e.GetKeyCode() )
+		{
+			case Key::N:
+			{
+				if (control)
+					NewScene();
+
+				break;
+			}
+			case Key::O:
+			{
+				if (control)
+					OpenScene();
+
+				break;
+			}
+			case Key::S:
+			{
+				if (control)
+				{
+					if (shift)
+						SaveSceneAs();
+				}
+
+				break;
+			}
+
+			// Gizmos
+			case Key::D0:
+			{
+				// if (!ImGuizmo::IsUsing())
+				// 	m_GizmoType = -1;
+                m_GizmoType = -1;
+				break;
+			}
+			case Key::D1:
+			{
+				// if (!ImGuizmo::IsUsing())
+				// 	m_GizmoType = ImGuizmo::OPERATION::TRANSLATE;
+
+                m_GizmoType = ImGuizmo::OPERATION::TRANSLATE;
+				break;
+			}
+			case Key::D2:
+			{
+				// if (!ImGuizmo::IsUsing())
+				// 	m_GizmoType = ImGuizmo::OPERATION::ROTATE;
+                m_GizmoType = ImGuizmo::OPERATION::ROTATE;
+				break;
+			}
+			case Key::D3:
+			{
+				// if (!ImGuizmo::IsUsing())
+				// 		m_GizmoType = ImGuizmo::OPERATION::SCALE;
+                m_GizmoType = ImGuizmo::OPERATION::SCALE;
+				break;
+			}
+		}
+
+		return false;
+    }
+
+    bool GL_EditorLayer::OnMouseButtonPressed(MouseButtonPressedEvent& e)
+    {
+        if (e.GetMouseButton() == Mouse::ButtonLeft)
+		{
+			// if (m_ViewportHovered && !ImGuizmo::IsOver() && !WindowsInput::IsKeyPressed(Key::LeftAlt))
+			// 	m_SceneHierarchyPanel.SetSelectedEntity(m_HoveredEntity);
+		}
+		return false;
+    }
 
 }

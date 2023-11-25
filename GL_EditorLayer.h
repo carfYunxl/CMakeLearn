@@ -11,6 +11,7 @@
 #include "Scene/Scene.h"
 #include "Panels/SceneHierarchyPanel.h"
 #include <filesystem>
+#include "KeyEvent.h"
 
 namespace GL
 {
@@ -34,6 +35,9 @@ namespace GL
         void OpenScene();
         void OpenScene(const std::filesystem::path& path);
         void SaveSceneAs();
+
+        bool OnKeyPressed(KeyPressedEvent& e);
+        bool OnMouseButtonPressed(MouseButtonPressedEvent& e);
 
     private:
         Camera          m_Camera{1.778f};
@@ -72,6 +76,8 @@ namespace GL
         std::unique_ptr<Scene> m_ActiveScene;
 
         SceneHierarchyPanel m_SceneHerarchyPanel;
+
+        int m_GizmoType{-1};
     };
 }
 

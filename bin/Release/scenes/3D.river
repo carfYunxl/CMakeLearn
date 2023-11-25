@@ -2,22 +2,13 @@ Scene: Untitled
 Entities:
   - Entity: 12837192831273
     TagComponent:
-      Tag: Blue
+      Tag: Left
     TransformComponent:
-      Translation: [-2.29999995, 1.70000005, 0]
-      Rotation: [0, 1.12050128, 0]
-      Scale: [2, 1, 2]
-    ColorComponent:
-      Color: [0, 0.131273985, 1, 1]
-  - Entity: 12837192831273
-    TagComponent:
-      Tag: Red Cube
-    TransformComponent:
-      Translation: [0, 0, 0]
+      Translation: [-8.76351547, 1.04476476, 0.138976336]
       Rotation: [0, 0, 0]
-      Scale: [2, 1, 2]
+      Scale: [0.292919695, 4.2592802, 12.2886353]
     ColorComponent:
-      Color: [1, 0, 0, 1]
+      Color: [0.471042454, 0.471042454, 0.471042454, 1]
   - Entity: 12837192831273
     TagComponent:
       Tag: Ground
@@ -26,13 +17,22 @@ Entities:
       Rotation: [0, 0, 0]
       Scale: [17.7999992, 0.200000003, 12.6000004]
     ColorComponent:
-      Color: [0.467181444, 0.443732172, 0.443732172, 1]
+      Color: [0.312741339, 0.312741339, 0.312741339, 1]
   - Entity: 12837192831273
     TagComponent:
-      Tag: Green
+      Tag: Red Cube
     TransformComponent:
-      Translation: [-4.4000001, 3.9000001, 0]
+      Translation: [-1.3178153, -0.0700852871, 0]
       Rotation: [0, 0, 0]
       Scale: [2, 1, 2]
     ColorComponent:
-      Color: [0.123552203, 1, 0, 1]
+      Color: [1, 0, 0, 1]
+  - Entity: 12837192831273
+    TagComponent:
+      Tag: Back
+    TransformComponent:
+      Translation: [0.0873063803, 1.16276717, -6.06832933]
+      Rotation: [0, 0, 0]
+      Scale: [17.5768604, 4.07873154, 0.351034313]
+    ColorComponent:
+      Color: [0.471042454, 0.471042454, 0.471042454, 1]

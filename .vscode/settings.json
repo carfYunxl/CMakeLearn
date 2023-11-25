@@ -84,7 +84,9 @@
         "xtree": "cpp",
         "random": "cpp",
         "stack": "cpp",
-        "valarray": "cpp"
+        "valarray": "cpp",
+        "ranges": "cpp",
+        "span": "cpp"
     },
     "C_Cpp.errorSquiggles": "disabled",
     "editor.scrollbar.horizontalScrollbarSize": 10,

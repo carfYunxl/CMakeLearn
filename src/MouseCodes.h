@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Razel
+namespace GL
 {
     using MouseCode = uint16_t;
     namespace Mouse

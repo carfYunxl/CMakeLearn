@@ -136,8 +136,12 @@ namespace GL
 				DrawEntityNode(entity);
         	});
 
-			if(ImGui::IsMouseDown(0) && ImGui::IsWindowHovered())
-				m_SelectedEntity = {};
+			ImGui::Text( "after draw entity node : %d", m_SelectedEntity.toInt() );
+
+			// if(ImGui::IsMouseDown(0) && ImGui::IsWindowHovered())
+			// {
+			// 	m_SelectedEntity = {};
+			// }
 
 			if( m_Scene->m_Registry.alive() == 0 )
 			{
@@ -152,12 +156,12 @@ namespace GL
 		}
         ImGui::End();
 
-        ImGui::Begin("Properties");
-        if( m_SelectedEntity )
-        {
-            DrawComponents(m_SelectedEntity);
-        }
-        ImGui::End();
+		ImGui::Begin("Properties");
+		if( m_SelectedEntity.isValid() )
+		{
+			DrawComponents(m_SelectedEntity);
+		}
+		ImGui::End();
     }
 
     void SceneHierarchyPanel::DrawEntityNode(Entity entity)
@@ -179,6 +183,7 @@ namespace GL
 		{
 			m_SelectedEntity = entity;
 		}
+
 		bool entityDeleted = false;
 		
 		if ( ImGui::BeginPopupContextItem(std::to_string(entity.toInt()).c_str(), 1) )
